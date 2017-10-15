@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>test</title>
+    <link rel="stylesheet" href="/js/layui/css/layui.css"/>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!--菜单-->
+        <div class="layui-header">
+            <div class="layui-logo">CMS</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="/customer/index">人员管理</a></li>
+                <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
+                <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
+                <li class="layui-nav-item"><a href="/remind/index">提醒</a></li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img"></img>我
+                </a>
+                    <dl class="layui-nav-child">
+                    <dd><a href="">退出</a></dd>
+                </dl>
+                </li>
+            </ul>
+        </div>
+
+
+    <div class="layui-body" style="left: 0">
+
+        <!--查询模块-->
+        <div style="padding: 15px;">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>查询</legend>
+            </fieldset>
+            <div class="layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" autocomplete="off" class="layui-input" id="name"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="tel" autocomplete="off" class="layui-input" id="tel"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">公司</label>
+                        <div class="layui-input-block">
+                            <select name="company" lay-filter="aihao">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-block">
+                            <select name="status" lay-filter="aihao">
+                                <option value="0">有效</option>
+                                <option value="1">无效</option>
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <button class="layui-btn" data-type="reload" >查询</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>显示</legend>
+            </fieldset>
+            <!--添加按钮-->
+            <button class="layui-btn add">添加</button>
+            <button class="layui-btn layui-btn-dange delete">删除</button>
+
+            <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
+        </div>
+    </div>
+</div>
+</body>
+<!--添加人员信息的模版-->
+<div id="addTemplate" hidden="hidden" style="margin: 20px">
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入姓名" class="layui-input"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="aihao">
+                    <option value="">test1</option>
+                    <option value="">test2</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入电话" class="layui-input"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入手机" class="layui-input"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属公司</label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="aihao">
+                    <option value="">test1</option>
+                    <option value="">test2</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">实际地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">暂住地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证号</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">其他</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!--操作模版-->
+<script type="text/html" id="editTemplate">
+    <a class="layui-btn layui-btn-mini" lay-event="edit">修改</a>
+</script>
+
+<script src="/js/layui/layui.all.js"></script>
+<script >
+    var API = {
+        search: "/customer/getData"
+    }
+
+    layui.use('table',function(){
+        /*table*/
+        var table =layui.table;
+        table.render({
+            elem:'#LAY_table_user',
+            url:API.search,
+            cols:[[{checkbox:true,fixed:true},
+                {field:'id',title:'ID',width:80,fixed:true},
+                {field:'userName',title:'姓名',width:80},
+                {field:'status',title:'状态',width:80},
+                {field:'tel',title:'电话',width:80,event: 'setTel'},
+                {field:'company',title:'所属公司',width:80},
+                {field:'mobile',title:'手机',width:80, event: 'setMobile'},
+                {field:'realAddress',title:'实际地址',width:200},
+                {field:'nowAddress',title:'暂住地址',width:200,event: 'setNowAddress'},
+                {field:'identify',title:'身份证号',width:200},
+                {field:'other',title:'其他',width:80},
+                {field:'uT',title:'操作时间',width:80},
+                {field:'uPName',title:'操作人',width:80},
+            ]],
+            id:'testReload',
+            page:true,
+            height:500
+        });
+
+        table.on('tool(user)',function(obj){
+            var data =obj.data;
+            if(obj.event ==='setTel'){
+                layer.prompt({formType:2,
+                    title:'修改 ID 为 ['+ data.id +'] 的用户签名',
+                    value:data.sign
+                    },
+                    function(value,index){layer.close(index);obj.update({sign:value
+
+                    });
+                });
+            }
+        });
+
+
+
+        var $ =layui.$, active ={reload:function(){
+            var name =$('#name');
+            var tel = $("#tel");
+            table.reload('testReload',{where:{key:{name:name.val(),tel:tel.val()}}});
+        }};
+        $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});
+
+    });
+
+    /*add*/
+    var layer = layui.layer;
+    var $ =layui.$
+    $(".add").on("click",function () {
+        layer.open({
+            type: 1,
+            area: '500px',
+            title :'添加人员',
+            content: $('#addTemplate'),
+            btn: ['添加'],
+            yes: function(index, layero){
+
+            }
+        });
+    })
+</script>
+
+</html>

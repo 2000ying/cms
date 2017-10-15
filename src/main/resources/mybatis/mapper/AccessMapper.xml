@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meidian.auth.dao.AccessDao" >
+  <resultMap id="BaseResultMap" type="com.meidian.auth.entity.Access" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="c_t" property="cT" jdbcType="INTEGER" />
+    <result column="u_t" property="uT" jdbcType="INTEGER" />
+    <result column="c_u" property="cU" jdbcType="BIGINT" />
+    <result column="u_u" property="uU" jdbcType="BIGINT" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, action, status, name, description, c_t, u_t, c_u, u_u, is_deleted
+  </sql>
+
+  <select id="getAccess" parameterType="com.meidian.auth.entity.Access" resultMap="BaseResultMap">
+    SELECT * FROM access
+    WHERE id = ${id}
+  </select>
+
+  <select id="getAccessList" parameterType="com.meidian.auth.entity.Access" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/>
+    FROM access
+    /*WHERE id = ${access.id}*/
+    ORDER BY  id
+  </select>
+</mapper>
