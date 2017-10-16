@@ -40,15 +40,19 @@
             <div class="layui-form layui-form-pane">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">姓名</label>
+                        <label class="layui-form-label">车牌号</label>
                         <div class="layui-input-inline">
                             <input type="text" name="name" autocomplete="off" class="layui-input" id="name"/>
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">电话</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="tel" autocomplete="off" class="layui-input" id="tel"/>
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-block">
+                            <select name="status" lay-filter="aihao">
+                                <option value="0">有效</option>
+                                <option value="1">无效</option>
+                                <option value="">全部</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -60,7 +64,7 @@
 
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+            <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">>
                 <legend>显示</legend>
             </fieldset>
             <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
@@ -85,8 +89,9 @@
                 {field:'tel',title:'载重量',width:80},
                 {field:'mobile',title:'发动机号',width:80},
                 {field:'realAddress',title:'车架号',width:200},
-                {field:'nowAddress',title:'运营证',width:200},
+                {field:'nowAddress',title:'营运证',width:200},
                 {field:'identify',title:'车牌号',width:200},
+                {field:'status',title:'状态',width:80},
                 {field:'other',title:'其他',width:80},
                 {field:'uT',title:'操作时间',width:80},
                 {field:'uPName',title:'操作人',width:80},

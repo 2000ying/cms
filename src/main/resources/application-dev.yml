@@ -3,11 +3,22 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://47.95.245.224:3306/cms?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    password: 1234567
+    url: jdbc:mysql://localhost:3306/cms?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    password: 123456
     username: root
   jpa:
     show-sql: true
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+    timeout: 0
+
 
 
 

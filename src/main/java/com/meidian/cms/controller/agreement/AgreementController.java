@@ -23,7 +23,7 @@ public class AgreementController {
     @RequestMapping("/index")
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("car/index");
+        mv.setViewName("agreement/index");
         return mv;
     }
 

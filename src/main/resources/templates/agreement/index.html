@@ -51,6 +51,24 @@
                             <input type="text" name="tel" autocomplete="off" class="layui-input" id="tel"/>
                         </div>
                     </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">车牌号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="car_number" autocomplete="off" class="layui-input" id="tel"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">入户时间</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" id="beginTime" name="beginTime" placeholder="开始时间" autocomplete="off" class="layui-input"/>
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" id="endTime" name="endTime" placeholder="结束时间" autocomplete="off" class="layui-input"/>
+                        </div>
+                    </div>
                 </div>
                 <div class="layui-form-item">
                     <button class="layui-btn" data-type="reload" >查询</button>
@@ -61,9 +79,11 @@
 
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-            <fieldset class="layui-elem-field layui-field-title">
+            <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">
                 <legend>显示</legend>
             </fieldset>
+            <button class="layui-btn add">添加</button>
+            <button class="layui-btn layui-btn-danger delete">删除</button>
             <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
         </div>
     </div>
@@ -85,10 +105,9 @@
                 {field:'userName',title:'姓名',width:80},
                 {field:'tel',title:'电话',width:80},
                 {field:'mobile',title:'手机',width:80},
-                {field:'realAddress',title:'实际地址',width:200},
-                {field:'nowAddress',title:'暂住地址',width:200},
-                {field:'identify',title:'身份证好',width:200},
-                {field:'other',title:'其他',width:80},
+                {field:'realAddress',title:'车牌号',width:200},
+                {field:'nowAddress',title:'签约入户时间',width:200},
+                {field:'identify',title:'押金',width:200},
                 {field:'uT',title:'操作时间',width:80},
                 {field:'uPName',title:'操作人',width:80},
                 {field:'uPName',title:'操作',width:80}
@@ -103,6 +122,15 @@
             table.reload('testReload',{where:{key:{name:name.val(),tel:tel.val()}}});
         }};
         $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});});
+
+    /*时间拾取器*/
+    var laydate = layui.laydate;
+    laydate.render({
+        elem: '#beginTime'
+    });
+    laydate.render({
+        elem: '#endTime'
+    });
 </script>
 
 </html>
