@@ -1,8 +1,10 @@
 package com.meidian.cms.controller.login;
 
 import com.meidian.cms.common.Result;
+import com.meidian.cms.utils.RedisUtil;
 import com.meidian.cms.vo.TestVo;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +24,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/login")
 public class AuthController {
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @RequestMapping("/index")
     public ModelAndView index(){

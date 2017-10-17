@@ -1,10 +1,15 @@
 package com.meidian.cms.config.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.meidian.cms.controller.customer.CustomerController;
+import com.meidian.cms.serviceClient.user.User;
+import com.meidian.cms.utils.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +29,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
 
     private static final String CMS_USER_TOKEN = "cms_user_token";
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
@@ -45,14 +53,28 @@ public class LoginInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-        }catch (Exception ex){
+            /* 3.校验缓存中的身份*/
+            User user = this.getUserByToken(token);
 
+
+
+        }catch (Exception ex){
+            logger.error("preHandle has error. The error is " + ex.getMessage());
         }
         return false;
     }
 
+    private User getUserByToken(String token) {
+        String str = redisUtil.getString(token);
+        if (StringUtils.isEmpty(str)){
+            return null;
+        }
+        User user = JSONObject.parseObject(str,User.class);
+        return user;
+    }
+
     private void goLogin(HttpServletRequest request, HttpServletResponse response) {
-        String url = "/";
+        String url = "/login/index";
         try {
             response.sendRedirect(url);
         } catch (IOException e) {
