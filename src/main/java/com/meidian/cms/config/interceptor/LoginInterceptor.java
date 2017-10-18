@@ -3,6 +3,7 @@ package com.meidian.cms.config.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.meidian.cms.controller.customer.CustomerController;
 import com.meidian.cms.serviceClient.user.User;
+import com.meidian.cms.serviceClient.user.service.UserService;
 import com.meidian.cms.utils.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         try {
@@ -55,7 +59,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             /* 3.校验缓存中的身份*/
             User user = this.getUserByToken(token);
-
+            if (user == null){
+                goLogin(request, response);
+                return false;
+            }
 
 
         }catch (Exception ex){
