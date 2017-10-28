@@ -78,6 +78,16 @@
 			<artifactId>spring-boot-starter-redis</artifactId>
 			<version>1.4.2.RELEASE</version>
 		</dependency>
+
+		<!--不校验html-->
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
