@@ -2,6 +2,7 @@ package com.meidian.cms.serviceClient.user.service.impl;
 
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.utils.ServiceResultUtil;
 import com.meidian.cms.controller.agreement.AgreementController;
 import com.meidian.cms.serviceClient.user.User;
 import com.meidian.cms.serviceClient.user.manager.UserManager;
@@ -23,22 +24,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<User> getUserByMobileAndPassword(String mobile,String password) {
         ServiceResult<User> result = new ServiceResult<User>();
-        try{
-            User user = userManager.getUserByMobileAndPassword(mobile,password);
-            if (null != user){
-                result.setSuccess(true);
-                result.setBody(user);
-            }else{
-                result.setErrorCode(ErrorCode.LOGIN_ERROR.getCode());
-                result.setSuccess(false);
-                result.setMessage(ErrorCode.LOGIN_ERROR.getMessage());
-            }
-        }catch (Exception ex){
-            logger.error("getUserByMobileAndPassword has error,The error is " + ex.getMessage(),ex);
-            result.setSuccess(false);
-            result.setErrorCode(ErrorCode.SERVICE_ERROR.getCode());
-            result.setMessage(ErrorCode.SERVICE_ERROR.getMessage());
+        User user = userManager.getUserByMobileAndPassword(mobile,password);
+        if (null == user){
+            return ServiceResultUtil.returnFalse();
         }
-        return result;
+        return ServiceResultUtil.returnTrue(user);
     }
 }

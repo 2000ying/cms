@@ -48,4 +48,10 @@ public class User {
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }
+
+    public String getUserString(){
+        return new StringBuilder().append(this.getName()).
+                append("_").append(this.getMobile()).append("_").
+                append(this.getPassword()).toString();
+    }
 }

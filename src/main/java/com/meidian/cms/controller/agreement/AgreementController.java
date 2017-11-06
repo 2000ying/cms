@@ -48,7 +48,7 @@ public class AgreementController {
 
         list.add(testVo);
 
-        result.setData(list);
+        /*result.setData(list);*/
         result.setCode(0);
         result.setCount(1);
         result.setMsg("success");

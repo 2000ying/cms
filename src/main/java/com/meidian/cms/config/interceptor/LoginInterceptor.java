@@ -1,6 +1,7 @@
 package com.meidian.cms.config.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.meidian.cms.common.TokenConstant;
 import com.meidian.cms.controller.customer.CustomerController;
 import com.meidian.cms.serviceClient.user.User;
 import com.meidian.cms.serviceClient.user.service.UserService;
@@ -29,7 +30,6 @@ import java.io.IOException;
 public class LoginInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
 
-    private static final String CMS_USER_TOKEN = "cms_user_token";
 
     @Autowired
     private RedisUtil redisUtil;
@@ -45,7 +45,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             Cookie[] cookies = request.getCookies();
             if (null != cookies) {
                 for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals(CMS_USER_TOKEN)) {
+                    if (cookie.getName().equals(TokenConstant.CMS_TOKEN)) {
                         token = cookie.getValue();
                         break;
                     }

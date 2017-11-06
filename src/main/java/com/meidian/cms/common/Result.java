@@ -1,6 +1,7 @@
 package com.meidian.cms.common;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Result<T> implements Serializable {
 
@@ -8,7 +9,7 @@ public class Result<T> implements Serializable {
 
     private String msg;
 
-    private T data;
+    private List<T> data;
 
     private Integer count;
 
@@ -28,19 +29,19 @@ public class Result<T> implements Serializable {
         this.msg = msg;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
     public Integer getCount() {
         return count;
     }
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
     }
 }
