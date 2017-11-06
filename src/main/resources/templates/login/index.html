@@ -36,13 +36,13 @@
                 <form class="layui-form" method = 'post'  action ="./login">
                     <div class="input-group">
                         <span class="input-group-addon glyphicon glyphicon-user" id="mobile"></span>
-                        <input id="mobileId" th:if${mobile} type="text" name="mobile"  class="form-control" placeholder="手机号" aria-describedby="mobile" lay-verify="required|phone|number">
+                        <input id="mobileId" type="text" name="mobile"  class="form-control" placeholder="手机号" aria-describedby="mobile">
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon glyphicon glyphicon-lock" id="password"></span>
-                        <input id="passwordId" value="${password}" type="password" name="password" class="form-control" placeholder="密码" aria-describedby="password" lay-verify="required">
+                        <input id="passwordId" type="password" name="password" class="form-control" placeholder="密码" aria-describedby="password">
                     </div>
-                    <button lay-submit type="button" class="btn btn-success" style="width: 100%;" lay-filter="*">登陆</button>
+                    <button lay-submit type="button" class="btn btn-success" style="width: 100%;" id="submit">登陆</button>
                 </form>
             </div>
             </table>
@@ -55,20 +55,33 @@
         "login" : "./login"
     }
     var $ =layui.$;
-    var result = $.parseJSON("${result}");
-    if (null == result){
-        var layer = layui.layer;
-        layer.msg(result.msg);
-    }
-    layui.use('form', function(){
-        var form = layui.form;
-        form.on('submit(*)', function(data){
-            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-            var field = data.field;
+    $("#submit").click(function(){
+        var mobile = $("#mobileId").val();
+        var password = $("#passwordId").val();
+        if (null == mobile || '' == mobile){
+            layer.msg("手机号不能为空！");
+            return;
+        }
+        if (null == password || '' == password){
+            layer.msg("密码不能为空！");
+            return;
+        }
+        $.ajax({
+            data:{
+                mobile : mobile,
+                password:password
+            },
+            url: API.login,
+            success:function(result){
+                if (result.code == 1){
+                    window.location.href = "../welcome/index";
+                }else{
+                    layer.msg(result.msg);
+                }
+            }
+         });
+    })
 
-            /*return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。*/
-        });
-    });
 </script>
 
 </html>

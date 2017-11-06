@@ -59,23 +59,13 @@ public class AuthController {
         this.checkParam(mobile,password);
         /*校验登陆失败次数*/
         if(this.checkLoginMore(mobile)){
-            ModelAndView mv = new ModelAndView();
-            mv.setViewName("login/index");
-            mv.addObject("mobile",mobile);
-            mv.addObject("password",password);
-            mv.addObject("result",ResultUtils.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"登陆太频繁，5分钟后重试！"));
-            return mv;
-
+            return ResultUtils.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"登陆太频繁，5分钟后重试！");
         }
+
         /*1数据库校验是否存在*/
         ServiceResult<User> userServiceResult = userService.getUserByMobileAndPassword(mobile,password);
         if (!userServiceResult.getSuccess()){
-            ModelAndView mv = new ModelAndView();
-            mv.setViewName("login/index");
-            mv.addObject("mobile",mobile);
-            mv.addObject("password",password);
-            mv.addObject("result",ResultUtils.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"手机号或密码错误！"));
-            return mv;
+            return ResultUtils.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"手机号或密码错误！");
         }
         /*2.创建token*/
         User user = userServiceResult.getBody();
@@ -85,9 +75,7 @@ public class AuthController {
         /*4.将token存入cookie*/
         this.saveCookie(response,token);
         /*5.跳转欢迎界面*/
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("login/welcome");
-        return "";
+        return ResultUtils.returnTrue();
     }
 
     /**
@@ -107,8 +95,8 @@ public class AuthController {
     * 存入token
     * */
     private void saveToken(String token, User user) {
-        String toSaveToken = new StringBuilder().append("Token_").append(token).toString();
-        redisUtil.setex(toSaveToken,LOGINING_TIME,JSON.toJSON(user));
+        /*String toSaveToken = new StringBuilder().append("Token_").append(token).toString();
+        redisUtil.setex(toSaveToken,LOGINING_TIME,JSON.toJSON(user));*/
 
     }
 
@@ -126,7 +114,8 @@ public class AuthController {
      * @return
      */
     private boolean checkLoginMore(String mobile) {
-        StringBuilder stringBuilder = new StringBuilder().append("mobile_").append(mobile);
+        return false;
+        /*StringBuilder stringBuilder = new StringBuilder().append("mobile_").append(mobile);
         String key = stringBuilder.toString();
         if (!redisUtil.exists(key)){
             redisUtil.setex(key, 300000, 1);
@@ -136,7 +125,7 @@ public class AuthController {
         if (times > TIMES){
             return true;
         }
-        return false;
+        return false;*/
     }
 
     private void checkParam(String mobile, String password) {

@@ -9,34 +9,34 @@ public class ResultUtils {
 
     public static Result returnFalse(Integer errorCode, String msg){
         Result result = new Result();
-        result.setCount(errorCode);
+        result.setCode(errorCode);
         result.setMsg(msg);
         return result;
     }
 
     public static Result returnFalse(Integer errorCode){
         Result result = new Result();
-        result.setCount(errorCode);
+        result.setCode(errorCode);
         return result;
     }
 
     public static Result returnTrue(){
         Result result = new Result();
-        result.setCount(ErrorCode.SUCCESS.getCode());
+        result.setCode(ErrorCode.SUCCESS.getCode());
         result.setMsg(ErrorCode.SUCCESS.getMessage());
         return result;
     }
 
     public static Result returnTrue(String msg){
         Result result = new Result();
-        result.setCount(ErrorCode.SUCCESS.getCode());
+        result.setCode(ErrorCode.SUCCESS.getCode());
         result.setMsg(msg);
         return result;
     }
 
     public static Result returnTrue(List body){
         Result result = new Result();
-        result.setCount(ErrorCode.SUCCESS.getCode());
+        result.setCode(ErrorCode.SUCCESS.getCode());
         result.setMsg(ErrorCode.SUCCESS.getMessage());
         result.setData(body);
         return result;
