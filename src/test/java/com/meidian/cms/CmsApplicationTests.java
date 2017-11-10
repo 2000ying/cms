@@ -24,4 +24,11 @@ public class CmsApplicationTests {
 		System.out.println(redisUtil.getString("test"));
 	}
 
+	@Test
+	public void  testNum(){
+		Integer tem = 10;
+		System.out.println(714/tem++);
+		System.out.println(tem);
+	}
+
 }

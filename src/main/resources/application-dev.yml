@@ -10,7 +10,7 @@ spring:
     show-sql: true
   redis:
     database: 0
-    host: 47.95.245.224
+    host: 127.0.0.1
     port: 6379
     pool:
       max-active: 8

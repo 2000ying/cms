@@ -95,8 +95,8 @@ public class AuthController {
     * 存入token
     * */
     private void saveToken(String token, User user) {
-        /*String toSaveToken = new StringBuilder().append("Token_").append(token).toString();
-        redisUtil.setex(toSaveToken,LOGINING_TIME,JSON.toJSON(user));*/
+        String toSaveToken = new StringBuilder().append("Token_").append(token).toString();
+        redisUtil.setex(toSaveToken,LOGINING_TIME,JSON.toJSON(user));
 
     }
 
@@ -114,18 +114,17 @@ public class AuthController {
      * @return
      */
     private boolean checkLoginMore(String mobile) {
-        return false;
-        /*StringBuilder stringBuilder = new StringBuilder().append("mobile_").append(mobile);
+        StringBuilder stringBuilder = new StringBuilder().append("mobile_").append(mobile);
         String key = stringBuilder.toString();
         if (!redisUtil.exists(key)){
             redisUtil.setex(key, 300000, 1);
             return false;
         }
-        Integer times = redisUtil.getJSONToObject(Integer.class,key);
+        Integer times = Integer.valueOf(redisUtil.getString(key));
         if (times > TIMES){
             return true;
         }
-        return false;*/
+        return false;
     }
 
     private void checkParam(String mobile, String password) {

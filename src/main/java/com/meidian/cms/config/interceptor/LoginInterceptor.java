@@ -63,7 +63,9 @@ public class LoginInterceptor implements HandlerInterceptor {
                 goLogin(request, response);
                 return false;
             }
-
+            user.setPassword(null);
+            request.setAttribute("user",user);
+            return true;
 
         }catch (Exception ex){
             logger.error("preHandle has error. The error is " + ex.getMessage());
@@ -72,7 +74,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private User getUserByToken(String token) {
-        String str = redisUtil.getString(token);
+        String str = redisUtil.getString(new StringBuilder().append("Token_").append(token).toString());
         if (StringUtils.isEmpty(str)){
             return null;
         }

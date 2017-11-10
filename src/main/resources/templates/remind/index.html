@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"   xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>test</title>
@@ -20,8 +20,8 @@
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img"></img>我
-                </a>
+                        <img src="/image/head.png" class="layui-nav-img"/><span  th:text="${user.name}"></span>
+                    </a>
                     <dl class="layui-nav-child">
                     <dd><a href="">退出</a></dd>
                 </dl>
