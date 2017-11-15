@@ -39,6 +39,7 @@ public class ResultUtils {
         result.setCode(ErrorCode.SUCCESS.getCode());
         result.setMsg(ErrorCode.SUCCESS.getMessage());
         result.setData(body);
+        result.setCount(body.size());
         return result;
     }
 }

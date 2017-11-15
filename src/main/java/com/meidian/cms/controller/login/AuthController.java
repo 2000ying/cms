@@ -36,7 +36,7 @@ public class AuthController {
 
     private static Integer TIMES = 5;//频繁登陆次数
 
-    private static final Integer LOGINING_TIME= 3 * 60 * 60 * 1000;//登陆失效时间 3小时
+    private static final Integer LOGINING_TIME= 3 * 60 * 60;//登陆失效时间 3小时
 
 
     @Autowired
@@ -134,11 +134,5 @@ public class AuthController {
         if (StringUtils.isEmpty(password)){
             throw new IllegalArgumentException("密码不能为空！");
         }
-    }
-
-    @ResponseBody
-    @RequestMapping("/logout")
-    public void logout(HttpServletRequest request){
-
     }
 }

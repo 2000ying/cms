@@ -1,5 +1,6 @@
 package com.meidian.cms.controller.customer;
 
+import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.Result;
 import com.meidian.cms.vo.TestVo;
 import org.slf4j.Logger;
@@ -29,25 +30,7 @@ public class CustomerController {
     @RequestMapping("/getData")
     public Result<List<TestVo>> getData(){
         Result<List<TestVo>> result = new Result<List<TestVo>>();
-
-        List<TestVo> list = new ArrayList<>();
-
-        TestVo testVo = new TestVo();
-
-        testVo.setCity("beijing");
-        testVo.setClassify("test");
-        testVo.setExperience(1);
-        testVo.setId((long)1);
-        testVo.setSex(1);
-        testVo.setUserName("test");
-        testVo.setWealth(1);
-        testVo.setScore(1);
-        testVo.setSign("test");
-
-        list.add(testVo);
-
-        /*result.setData(list);*/
-        result.setCode(0);
+        result.setCode(ErrorCode.SUCCESS.getCode());
         result.setCount(1);
         result.setMsg("success");
 

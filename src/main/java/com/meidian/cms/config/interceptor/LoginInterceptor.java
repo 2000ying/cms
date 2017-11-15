@@ -30,7 +30,6 @@ import java.io.IOException;
 public class LoginInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
 
-
     @Autowired
     private RedisUtil redisUtil;
 
@@ -65,6 +64,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             }
             user.setPassword(null);
             request.setAttribute("user",user);
+            request.setAttribute("token",token);
             return true;
 
         }catch (Exception ex){

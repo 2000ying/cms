@@ -2,7 +2,7 @@ package com.meidian.cms.common.Enum;
 
 public enum ErrorCode {
 
-    SUCCESS(1,"成功！"),
+    SUCCESS(0,"成功！"),
     PARAM_ERROR(100,"参数为空！"),
     BUSINESS_DEFAULT_ERROR(200,"业务异常"),
     SERVICE_ERROR(500,"服务发生异常,请联系啊相关人员！");

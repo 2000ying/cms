@@ -73,7 +73,7 @@
             },
             url: API.login,
             success:function(result){
-                if (result.code == 1){
+                if (result.code == 0){
                     window.location.href = "../welcome/index";
                 }else{
                     layer.msg(result.msg);
