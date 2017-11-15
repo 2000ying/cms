@@ -127,6 +127,7 @@
 
                     }
                 });
+                form.render('select');
             }
         });
 
@@ -136,7 +137,6 @@
             laytpl($("#editTpl").html()).render(data, function(html){
                 result = html;
             });
-            form.render();
             return result;
         }
     });
