@@ -3,6 +3,7 @@ package com.meidian.cms.controller.company;
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.Result;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.Strings;
 import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.common.utils.ResultUtils;
 import com.meidian.cms.common.utils.TimeUtil;
@@ -49,15 +50,16 @@ public class CompanyController extends BasicController{
     public Result<List<Company>> getData(HttpServletRequest request, Company company) throws BusinessException {
         User user = getUser(request);
         company.setOwner(user.getId());
+        company.ifCompanyNameBlankToNull();
         ServiceResult<List<Company>> companyResult = companyService.findAll(company);
         if (!companyResult.getSuccess()){
             throw new BusinessException("获取公司报错!", ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
         }
-        List<CompanyVo> companyVoList = this.makeVo(companyResult.getBody());
+        List<CompanyVo> companyVoList = this.makeVo(companyResult.getBody(),user);
         return ResultUtils.returnTrue(companyVoList);
     }
 
-    private List<CompanyVo> makeVo(List<Company> body) {
+    private List<CompanyVo> makeVo(List<Company> body,User user) {
         List<CompanyVo> result = new ArrayList<>();
         if (CollectionUtils.isEmpty(body)){
             return result;
@@ -66,8 +68,63 @@ public class CompanyController extends BasicController{
             CompanyVo companyVo = new CompanyVo();
             BeanUtils.copyProperties(obj,companyVo);
             companyVo.setuTString(TimeUtil.getFormatDate(companyVo.getuT(),new SimpleDateFormat("yyyy-MM-dd")));
+            companyVo.setOwnerName(user.getName());
             result.add(companyVo);
         });
         return result;
+    }
+
+    @ResponseBody
+    @RequestMapping("/update")
+    public Result<Boolean> updateData(HttpServletRequest request, Company company) throws BusinessException {
+        User user = getUser(request);
+        company.setuU(user.getId());
+        company.setuUName(user.getName());
+        company.setuT(TimeUtil.getNowTimeStamp());
+        company.setCrew(Strings.defaultIfNull(company.getCrew(),""));
+        ServiceResult<Boolean> companyResult = companyService.updateCompanyById(company);
+        if (!companyResult.getSuccess()){
+            throw new BusinessException(companyResult.getMessage(), ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+        return ResultUtils.returnTrue(companyResult.getMessage());
+    }
+
+    @ResponseBody
+    @RequestMapping("/delete")
+    public Result<Boolean> deleteData(HttpServletRequest request, Company company) throws BusinessException {
+        User user = getUser(request);
+        company.setuU(user.getId());
+        company.setuUName(user.getName());
+        company.setuT(TimeUtil.getNowTimeStamp());
+        ServiceResult<Boolean> companyResult = companyService.deleteCompanyById(company);
+        if (!companyResult.getSuccess()){
+            throw new BusinessException(companyResult.getMessage(), ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+        return ResultUtils.returnTrue(companyResult.getMessage());
+    }
+
+    @ResponseBody
+    @RequestMapping("/add")
+    public Result<Boolean> addData(HttpServletRequest request, Company company) throws BusinessException {
+        User user = getUser(request);
+        this.makeData(company,user);
+        ServiceResult<Boolean> companyResult = companyService.save(company);
+        if (!companyResult.getSuccess()){
+            throw new BusinessException(companyResult.getMessage(), ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+        return ResultUtils.returnTrue(companyResult.getMessage());
+    }
+
+    private void makeData(Company company, User user) {
+        company.setuU(user.getId());
+        company.setuUName(user.getName());
+        company.setuT(TimeUtil.getNowTimeStamp());
+        company.setcT(TimeUtil.getNowTimeStamp());
+        company.setcU(user.getId());
+        company.setcUName(user.getName());
+        company.setOwner(user.getId());
+        if (null == company.getCrew()){
+            company.setCrew("");
+        }
     }
 }

@@ -1,9 +1,7 @@
 package com.meidian.cms.serviceClient.company;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -16,6 +14,7 @@ import java.io.Serializable;
  *         2017/11/10
  */
 @Entity
+@Table(name = "company")
 public class Company implements Serializable {
 
     @Id
@@ -145,5 +144,11 @@ public class Company implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public void ifCompanyNameBlankToNull(){
+        if ("".equals(companyName)){
+            companyName =  null;
+        }
     }
 }

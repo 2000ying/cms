@@ -16,4 +16,12 @@ import java.util.List;
 public interface CompanyManager {
 
     public List<Company> findAll(Company company);
+
+    public Integer updateCompanyById(Company company);
+
+    public Integer deleteCompanyById(Company company);
+
+    public Integer save(Company company);
+
+    public List<Company> getCompanyByOwnerAndStatus(Long id, Integer start);
 }

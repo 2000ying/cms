@@ -22,4 +22,31 @@ public interface CompanyService {
      * @return
      */
     public ServiceResult<List<Company>> findAll(Company company);
+
+    /**
+     * 更新公司信息
+     * @param company
+     * @return
+     */
+    public ServiceResult<Boolean> updateCompanyById(Company company);
+
+    /**
+     * 逻辑删除公司信息
+     * @param company
+     * @return
+     */
+    ServiceResult<Boolean> deleteCompanyById(Company company);
+
+    /**
+     * 存储公司信息
+     * @param company
+     * @return
+     */
+    ServiceResult<Boolean> save(Company company);
+
+    /**
+     * 根据登陆人的id有效的
+     * @return
+     */
+    ServiceResult<List<Company>> getValidCompanyByUserId( Long id);
 }

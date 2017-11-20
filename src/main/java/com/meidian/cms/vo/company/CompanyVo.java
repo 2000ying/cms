@@ -18,6 +18,8 @@ import java.io.Serializable;
  */
 public class CompanyVo extends Company implements Serializable {
 
+    private String ownerName;
+
     private String uTString;
 
     public String getuTString() {
@@ -26,5 +28,13 @@ public class CompanyVo extends Company implements Serializable {
 
     public void setuTString(String uTString) {
         this.uTString = uTString;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 }

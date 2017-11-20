@@ -59,7 +59,9 @@
                         <label class="layui-form-label">公司</label>
                         <div class="layui-input-block">
                             <select name="company" lay-filter="aihao">
-                                <option value="">全部</option>
+                                <option value>全部</option>
+                                <option th:each="company : ${companyList}"
+                                        th:value="${company.id}" th:text="${company.companyName}"></option>
                             </select>
                         </div>
                     </div>

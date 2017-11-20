@@ -1,5 +1,6 @@
 package com.meidian.cms.serviceClient.company.manager.impl;
 
+import com.meidian.cms.common.constant.DeleteStatus;
 import com.meidian.cms.serviceClient.company.Company;
 import com.meidian.cms.serviceClient.company.dao.CompanyDao;
 import com.meidian.cms.serviceClient.company.manager.CompanyManager;
@@ -36,5 +37,29 @@ public class CompanyManagerImpl implements CompanyManager {
         //创建实例
         Example<Company> ex = Example.of(company, matcher);
         return companyDao.findAll(ex,sort);
+    }
+
+    @Override
+    public Integer updateCompanyById(Company company) {
+        return companyDao.updateCompanyById(company.getCompanyName(),company.getStatus(),
+                company.getCrew(), company.getuU(),
+                company.getuT(),company.getId(),company.getuUName());
+    }
+
+    @Override
+    public Integer deleteCompanyById(Company company) {
+        return companyDao.deleteCompanyById(DeleteStatus.Deleted,company.getuU(),
+                company.getuT(),company.getId(),company.getuUName());
+    }
+
+    @Override
+    public Integer save(Company company) {
+        companyDao.save(company);
+        return 1;
+    }
+
+    @Override
+    public List<Company> getCompanyByOwnerAndStatus(Long id, Integer status) {
+        return companyDao.getCompanyByOwnerAndStatus(id,status);
     }
 }
