@@ -51,7 +51,7 @@ public class RemindController {
 
         /*result.setData(list);*/
         result.setCode(0);
-        result.setCount(1);
+        result.setCount(1L);
         result.setMsg("success");
 
         return result;

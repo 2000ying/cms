@@ -1,12 +1,14 @@
 package com.meidian.cms.serviceClient.customer.service.impl;
 
-import com.meidian.cms.common.Result;
+import com.meidian.cms.common.Enum.ErrorCode;
+import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.utils.ServiceResultUtil;
 import com.meidian.cms.serviceClient.customer.Client;
 import com.meidian.cms.serviceClient.customer.manager.ClientManager;
 import com.meidian.cms.serviceClient.customer.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +29,22 @@ public class ClientServiceImpl implements ClientService {
     private ClientManager clientManager;
 
     @Override
-    public Page<Client> getPageByClient(PageRequest pageRequest, Client client) {
-        return clientManager.getPageByClient(pageRequest,client);
+    public Page<Client> getPageByClient(Pageable pageable, Client client, List<Long> companyIds) {
+        return clientManager.getPageByClient(pageable,client,companyIds);
+    }
+
+    /**
+     * 增加商户
+     *
+     * @param client
+     * @return
+     */
+    @Override
+    public ServiceResult<Boolean> addClient(Client client) {
+        Boolean isAdd = clientManager.addClient(client);
+        if (!isAdd){
+            return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"创建失败！");
+        }
+        return ServiceResultUtil.returnTrue("创建成功！");
     }
 }

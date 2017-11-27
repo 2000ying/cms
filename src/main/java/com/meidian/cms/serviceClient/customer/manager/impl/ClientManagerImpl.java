@@ -1,11 +1,21 @@
 package com.meidian.cms.serviceClient.customer.manager.impl;
 
+import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.serviceClient.customer.Client;
 import com.meidian.cms.serviceClient.customer.dao.ClientDao;
 import com.meidian.cms.serviceClient.customer.manager.ClientManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Title: com.meidian.cms.serviceClient.customer.manager.impl<br>
@@ -23,14 +33,42 @@ public class ClientManagerImpl implements ClientManager {
     private ClientDao clientDao;
 
     @Override
-    public Page<Client> getPageByClient(Pageable pageable, Client client) {
+    public Page<Client> getPageByClient(Pageable pageable, Client client, List<Long> companyIds) {
         //创建实例
-        ExampleMatcher matcher = ExampleMatcher.matching() //构建对象
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.startsWith())
-                .withIgnorePaths("address","nowAddress","identifyNumber",
-                        "other","companyName","cT","cUName","cU","uT","uU","uUName");
-        //创建实例
-        Example<Client> example = Example.of(client, matcher);
-        return clientDao.findAll(example,pageable);
+        Specification<Client> specification = getWhereClause(client,companyIds);
+        return clientDao.findAll(specification,pageable);
+    }
+
+    private Specification<Client> getWhereClause(Client client, List<Long> companyIds) {
+        return new Specification<Client>() {
+            @Override
+            public Predicate toPredicate(Root<Client> root, CriteriaQuery<?> criteriaQuery,
+                                         CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<>();
+                if (!StringUtils.isEmpty(client.getName())){
+                    predicate.add(cb.like(root.get("name"),client.getName()));
+                }
+                if (!StringUtils.isEmpty(client.getTel())){
+                    predicate.add(cb.like(root.get("tel"),client.getTel()));
+                }
+                if (!CollectionUtil.isEmpty(companyIds)){
+                    predicate.add(root.get("companyId").in(companyIds));
+                }
+                if (client.getStatus() != null){
+                    predicate.add(cb.equal(root.get("status"),client.getStatus()));
+                }
+                Predicate[] pre = new Predicate[predicate.size()];
+                return criteriaQuery.where(predicate.toArray(pre)).getRestriction();
+            }
+        };
+    }
+
+    @Override
+    public Boolean addClient(Client client) {
+        Client c = clientDao.save(client);
+        if (c == null){
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 }

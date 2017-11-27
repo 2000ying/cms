@@ -1,9 +1,9 @@
 package com.meidian.cms.serviceClient.customer.service;
 
-import com.meidian.cms.common.Result;
+import com.meidian.cms.common.ServiceResult;
 import com.meidian.cms.serviceClient.customer.Client;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,9 +19,17 @@ import java.util.List;
 public interface ClientService {
     /**
      * 根据查询条件获取分页信息
-     * @param pageRequest
+     * @param pageable
+     * @param client
+     * @param companyIds
+     * @return
+     */
+    Page<Client> getPageByClient(Pageable pageable, Client client, List<Long> companyIds);
+
+    /**
+     * 增加商户
      * @param client
      * @return
      */
-    Page<Client> getPageByClient(PageRequest pageRequest, Client client);
+    ServiceResult<Boolean> addClient(Client client);
 }

@@ -58,7 +58,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">公司</label>
                         <div class="layui-input-block">
-                            <select name="company" lay-filter="aihao">
+                            <select name="companyId" lay-filter="aihao" id="companyId">
                                 <option value>全部</option>
                                 <option th:each="company : ${companyList}"
                                         th:value="${company.id}" th:text="${company.companyName}"></option>
@@ -68,7 +68,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">状态</label>
                         <div class="layui-input-block">
-                            <select name="status" lay-filter="aihao">
+                            <select name="status" lay-filter="aihao" id="status">
                                 <option value="0">有效</option>
                                 <option value="1">无效</option>
                                 <option value="">全部</option>
@@ -91,120 +91,49 @@
             </fieldset>
             <!--添加按钮-->
             <button class="layui-btn add">添加</button>
-            <button class="layui-btn layui-btn-dange delete">删除</button>
 
             <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
         </div>
     </div>
 </div>
 </body>
-<!--添加人员信息的模版-->
-<div id="addTemplate" hidden="hidden" style="margin: 20px">
-    <form class="layui-form layui-form-pane" action="">
-        <div class="layui-form-item">
-            <label class="layui-form-label">姓名</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入姓名" class="layui-input"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
-            <div class="layui-input-block">
-                <select name="interest" lay-filter="aihao">
-                    <option value="">test1</option>
-                    <option value="">test2</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">电话</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入电话" class="layui-input"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">手机</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入手机" class="layui-input"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">所属公司</label>
-            <div class="layui-input-block">
-                <select name="interest" lay-filter="aihao">
-                    <option value="">test1</option>
-                    <option value="">test2</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">实际地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">暂住地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">身份证号</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">其他</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
-            </div>
-        </div>
-
-    </form>
-</div>
-
-<!--操作模版-->
-<script type="text/html" id="editTemplate">
-    <a class="layui-btn layui-btn-mini" lay-event="edit">修改</a>
-</script>
 
 <script src="/js/layui/layui.all.js"></script>
-<script >
-    var API = {
-        search: "/customer/getData"
-    }
 
-    layui.use('table',function(){
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var companyList = [[${companyList}]];
+    /*]]>*/
+    var API = {
+        search: "/customer/getData",
+        add   : "/customer/add"
+    }
+    var $ =layui.$;
+
+    layui.use(['table','laytpl','form'],function(){
         /*table*/
         var table =layui.table;
+        var form = layui.form;
+        var laytpl = layui.laytpl;
         table.render({
             elem:'#LAY_table_user',
             url:API.search,
-            cols:[[{checkbox:true,fixed:true},
+            cols:[[
                 {field:'id',title:'ID',width:80,fixed:true},
-                {field:'userName',title:'姓名',width:80},
-                {field:'status',title:'状态',width:80},
-                {field:'tel',title:'电话',width:80,event: 'setTel'},
-                {field:'company',title:'所属公司',width:80},
-                {field:'mobile',title:'手机',width:80, event: 'setMobile'},
-                {field:'realAddress',title:'实际地址',width:200},
+                {field:'name',title:'姓名',width:80},
+                {field:'status',title:'状态',width:80,templet: '.statusTpl'},
+                {field:'mobile',title:'电话',width:200,event: 'setTel'},
+                {field:'companyName',title:'所属公司',width:200},
+                {field:'tel',title:'手机',width:200, event: 'setMobile'},
+                {field:'address',title:'实际地址',width:200},
                 {field:'nowAddress',title:'暂住地址',width:200,event: 'setNowAddress'},
-                {field:'identify',title:'身份证号',width:200},
+                {field:'identifyNumber',title:'身份证号',width:200},
                 {field:'other',title:'其他',width:80},
                 {field:'uT',title:'操作时间',width:80},
-                {field:'uPName',title:'操作人',width:80},
+                {field:'uUName',title:'操作人',width:80},
+                {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
             ]],
-            id:'testReload',
+            id:'client',
             page:true,
             height:500
         });
@@ -222,33 +151,213 @@
                 });
             }
         });
-
-
-
-        var $ =layui.$, active ={reload:function(){
-            var name =$('#name');
-            var tel = $("#tel");
-            table.reload('testReload',{where:{key:{name:name.val(),tel:tel.val()}}});
+        var active ={reload:function(){
+            var name =$('#name').val();
+            var tel = $("#tel").val();
+            var companyId = $("#companyId").val();
+            var status = $("#status").val();
+            table.reload('testReload',{where:{name:name,mobile:tel,companyId:companyId,status:status}});
         }};
         $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});
 
-    });
 
-    /*add*/
-    var layer = layui.layer;
-    var $ =layui.$
-    $(".add").on("click",function () {
-        layer.open({
-            type: 1,
-            area: '500px',
-            title :'添加人员',
-            content: $('#addTemplate'),
-            btn: ['添加'],
-            yes: function(index, layero){
-
+        /*操作事件*/
+        //监听工具条
+        table.on('tool(user)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.post({
+                        url:API.delete,
+                        data:{id:data.id},
+                        success:function (result) {
+                            if (result.code == 0){
+                                table.reload('companyTable');
+                            }
+                            layer.close(index);
+                            layer.msg(result.msg);
+                        }
+                    })
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.open({
+                    type: 1,
+                    area: ['800px', '350px'],
+                    title: ['修改公司信息', 'font-size:18px;'],
+                    skin: 'layui-layer-molv',
+                    content: getContent(data),
+                    btn: ['确认'],
+                    yes: function(index, layero) {
+                        var dataOfEdit = {
+                            id : data.id,
+                            companyName : $("#addAndEditTmpl #nameEdit").val(),
+                            crew : $("#addAndEditTmpl #crewEdit").val(),
+                            status : $("#addAndEditTmpl .status").val()
+                        }
+                        $.post({
+                            url:API.update,
+                            data:dataOfEdit,
+                            success:function (result) {
+                                if (result.code == 0){
+                                    table.reload('companyTable');
+                                }
+                                layer.close(index);
+                                layer.msg(result.msg);
+                            }
+                        })
+                    }
+                });
+                form.render('select');
             }
         });
-    })
+        /*新增*/
+        $(".add").click(function () {
+            layer.open({
+                type: 1,
+                area: ['800px', '400px'],
+                title: ['新增客户', 'font-size:18px;'],
+                skin: 'layui-layer-molv',
+                content: getContent(companyList),
+                btn: ['确认'],
+                yes: function(index, layero) {
+                    var dataOfAdd = {
+                        name            : $("#addAndEditTmpl #name").val(),
+                        tel             : $("#addAndEditTmpl #tel").val(),
+                        mobile          : $("#addAndEditTmpl #mobile").val(),
+                        address         : $("#addAndEditTmpl #address").val(),
+                        nowAddress      : $("#addAndEditTmpl #nowAddress").val(),
+                        identifyNumber  : $("#addAndEditTmpl #identifyNumber").val(),
+                        other           : $("#addAndEditTmpl #other").val(),
+                        status          : $("#addAndEditTmpl #status").val(),
+                        companyId       : $("#addAndEditTmpl #companyId").val()
+                    }
+                    $.post({
+                        url:API.add,
+                        data:dataOfAdd,
+                        success:function (result) {
+                            if (result.code == 0){
+                                table.reload('client');
+                            }
+                            layer.close(index);
+                            layer.msg(result.msg);
+                        }
+                    })
+                }
+            });
+            form.render('select');
+        });
+
+        //获取新增页面的
+        function getContent(data) {
+            var result = null;
+            laytpl($("#addTemplate").html()).render(data, function(html){
+                result = html;
+            });
+            return result;
+        }
+    });
+
+</script>
+
+<!--状态模板-->
+<script type="text/html" class="statusTpl" hidden>
+    {{#  if(d.status === 0){ }}
+    <span style="color: #5FB878;">有效</span>
+    {{#  } else { }}
+    无效
+    {{#  } }}
+</script>
+
+<!--编辑模板-->
+<script type="text/html" id="barRender">
+    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="addTemplate">
+<!--添加人员信息的模版-->
+<div style="margin: 20px">
+    <div style="margin: 10px" id="addAndEditTmpl">
+        <div class="layui-form-item layui-form layui-form-pane">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input id="name" type="text" required  lay-verify="required" name="name" autocomplete="off" placeholder="请输入姓名" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input id="tel" type="text" name="tel" autocomplete="off" placeholder="请输入电话" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-block">
+                     <input id="mobile" type="text" required  lay-verify="required" name="mobile" autocomplete="off" placeholder="请输入手机" class="layui-input"/>
+                 </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">实际地址</label>
+                <div class="layui-input-inline">
+                    <input id="address" type="text" required  lay-verify="required" name="address" autocomplete="off" placeholder="请输入实际地址" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">暂住地址</label>
+                <div class="layui-input-block">
+                    <input id="nowAddress" type="text" name="nowAddress" autocomplete="off" placeholder="请输入暂住地址" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">身份证号</label>
+                <div class="layui-input-inline">
+                    <input id="identifyNumber" type="text" required  lay-verify="required" name="identifyNumber" autocomplete="off" placeholder="请输入身份证" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">其他</label>
+                <div class="layui-input-inline">
+                    <input id="other" type="text" name="other" autocomplete="off" placeholder="其他备注信息" class="layui-input" style="width: 500px;"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <select id="status" name="status" required lay-filter="status_add_edit">
+                        <option value=0>有效</option>
+                        <option value=1>无效</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <label class="layui-form-label">所属公司</label>
+                <div class="layui-input-inline">
+                    <select id="companyId" name="companyId" lay-filter="status_add_edit">
+                        {{#  layui.each(d, function(index, item){ }}
+                        <option value='{{item.id}}'>{{item.companyName}}</option>
+                        {{#  }); }}
+                        {{#  if(d.length === 0){ }}
+                        无数据
+                        {{#  } }}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </script>
 
 </html>

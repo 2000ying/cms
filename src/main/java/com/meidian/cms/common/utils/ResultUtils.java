@@ -2,6 +2,7 @@ package com.meidian.cms.common.utils;
 
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.Result;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -39,7 +40,15 @@ public class ResultUtils {
         result.setCode(ErrorCode.SUCCESS.getCode());
         result.setMsg(ErrorCode.SUCCESS.getMessage());
         result.setData(body);
-        result.setCount(body.size());
+        result.setCount((long)body.size());
+        return result;
+    }
+
+    public static Result returnTrue(Page page){
+        Result result = new Result();
+        result.setCode(ErrorCode.SUCCESS.getCode());
+        result.setData(page.getContent());
+        result.setCount(page.getTotalElements());
         return result;
     }
 }

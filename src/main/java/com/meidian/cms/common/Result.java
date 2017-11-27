@@ -11,7 +11,7 @@ public class Result<T> implements Serializable {
 
     private List<T> data;
 
-    private Integer count;
+    private Long count;
 
     public Integer getCode() {
         return code;
@@ -29,19 +29,19 @@ public class Result<T> implements Serializable {
         this.msg = msg;
     }
 
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
     public List<T> getData() {
         return data;
     }
 
     public void setData(List<T> data) {
         this.data = data;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }

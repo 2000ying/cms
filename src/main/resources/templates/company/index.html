@@ -100,7 +100,7 @@
                 {field:'companyName',title:'公司名', align:'center',width:150},
                 {field:'ownerName',title:'公司拥有者', align:'center',width:200},
                 {field:'crew',title:'组员（以逗号分隔）', align:'center',width:200},
-                {field:'status',title:'状态',width:80, align:'center', templet: '#statusTpl'},
+                {field:'status',title:'状态',width:80, align:'center', templet: '.statusTpl'},
                 {field:'uTString',title:'操作时间',width:200, align:'center'},
                 {field:'uUName',title:'操作人',width:80, align:'center'},
                 {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
@@ -179,11 +179,6 @@
                 content: getContent(defaultAddData),
                 btn: ['确认'],
                 yes: function(index, layero) {
-                    var dataOfAdd = {
-                        companyName : $("#addAndEditTmpl #nameEdit").val(),
-                        crew : $("#addAndEditTmpl #crewEdit").val(),
-                        status : $("#addAndEditTmpl .status").val()
-                    }
                     $.post({
                         url:API.add,
                         data:dataOfAdd,

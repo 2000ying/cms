@@ -6,9 +6,12 @@ import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.serviceClient.company.Company;
 import com.meidian.cms.serviceClient.company.service.CompanyService;
 import com.meidian.cms.serviceClient.user.User;
+import com.meidian.cms.vo.company.CompanyVo;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
