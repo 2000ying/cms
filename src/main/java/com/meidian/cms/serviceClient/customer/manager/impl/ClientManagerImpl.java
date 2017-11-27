@@ -71,4 +71,22 @@ public class ClientManagerImpl implements ClientManager {
         }
         return Boolean.TRUE;
     }
+
+    @Override
+    public Boolean updateClient(Client client) {
+        Client clientSave = clientDao.findOne(client.getId());
+        clientSave.setCompanyName(client.getCompanyName());
+        clientSave.setuT(client.getuT());
+        clientSave.setuUName(client.getuUName());
+        clientSave.setAddress(client.getAddress());
+        clientSave.setIdentifyNumber(client.getIdentifyNumber());
+        clientSave.setTel(client.getTel());
+        clientSave.setCompanyId(client.getCompanyId());
+        clientSave.setStatus(client.getStatus());
+        clientSave.setNowAddress(client.getNowAddress());
+        clientSave.setMobile(client.getMobile());
+        clientSave.setName(client.getName());
+        clientSave.setOther(client.getOther());
+        return Boolean.TRUE;
+    }
 }

@@ -22,4 +22,6 @@ public interface ClientManager {
     Page<Client> getPageByClient(Pageable pageable, Client client, List<Long> companyIds);
 
     Boolean addClient(Client client);
+
+    Boolean updateClient(Client client);
 }

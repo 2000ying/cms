@@ -47,4 +47,18 @@ public class ClientServiceImpl implements ClientService {
         }
         return ServiceResultUtil.returnTrue("创建成功！");
     }
+
+    /**
+     * 更新商户
+     * @param client
+     * @return
+     */
+    @Override
+    public ServiceResult<Boolean> updateClient(Client client) {
+        Boolean isUpdate = clientManager.updateClient(client);
+        if (!isUpdate){
+            return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"更新失败！");
+        }
+        return ServiceResultUtil.returnTrue("更新成功！");
+    }
 }

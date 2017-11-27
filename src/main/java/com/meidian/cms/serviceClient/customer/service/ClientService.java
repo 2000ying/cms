@@ -32,4 +32,11 @@ public interface ClientService {
      * @return
      */
     ServiceResult<Boolean> addClient(Client client);
+
+    /**
+     * 更新商户
+     * @param client
+     * @return
+     */
+    ServiceResult<Boolean> updateClient(Client client);
 }

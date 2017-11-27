@@ -80,7 +80,7 @@ public class CustomerController extends BasicController{
     public Result<List<Client>> add(HttpServletRequest request,Client client) throws BusinessException {
         User user = getUser(request);
         List<Long> companyIds = new ArrayList<>();
-        this.makeData(user,client);
+        this.makeDataForAdd(user,client);
         ServiceResult<Boolean> serviceResult = clientService.addClient(client);
         if (!serviceResult.getSuccess()){
             return ResultUtils.returnFalse(serviceResult.getErrorCode(),serviceResult.getMessage());
@@ -88,7 +88,7 @@ public class CustomerController extends BasicController{
         return ResultUtils.returnTrue(serviceResult.getMessage());
     }
 
-    private void makeData(User user, Client client) throws BusinessException {
+    private void makeDataForAdd(User user, Client client) throws BusinessException {
         List<Company> companyList = getCompanyByUser(user);
         Map<Long,String> companyMap = companyList.stream().collect(Collectors.toMap(Company::getId,Company::getCompanyName));
 
@@ -98,6 +98,28 @@ public class CustomerController extends BasicController{
         client.setuU(user.getId());
         client.setuT(TimeUtil.getNowTimeStamp());
         client.setcT(TimeUtil.getNowTimeStamp());
+        client.setCompanyName(companyMap.get(client.getCompanyId()));
+    }
+
+    @ResponseBody
+    @RequestMapping("/update")
+    public Result<List<Client>> update(HttpServletRequest request,Client client) throws BusinessException {
+        User user = getUser(request);
+        this.makeDataForUpdate(user,client);
+        ServiceResult<Boolean> serviceResult = clientService.updateClient(client);
+        if (!serviceResult.getSuccess()){
+            return ResultUtils.returnFalse(serviceResult.getErrorCode(),serviceResult.getMessage());
+        }
+        return ResultUtils.returnTrue(serviceResult.getMessage());
+    }
+
+    private void makeDataForUpdate(User user, Client client) throws BusinessException{
+        List<Company> companyList = getCompanyByUser(user);
+        Map<Long,String> companyMap = companyList.stream().collect(Collectors.toMap(Company::getId,Company::getCompanyName));
+
+        client.setuUName(user.getName());
+        client.setuU(user.getId());
+        client.setuT(TimeUtil.getNowTimeStamp());
         client.setCompanyName(companyMap.get(client.getCompanyId()));
     }
 }

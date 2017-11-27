@@ -106,7 +106,8 @@
     /*]]>*/
     var API = {
         search: "/customer/getData",
-        add   : "/customer/add"
+        add   : "/customer/add",
+        update: "/customer/update"
     }
     var $ =layui.$;
 
@@ -121,13 +122,13 @@
             cols:[[
                 {field:'id',title:'ID',width:80,fixed:true},
                 {field:'name',title:'姓名',width:80},
-                {field:'status',title:'状态',width:80,templet: '.statusTpl'},
                 {field:'mobile',title:'电话',width:200,event: 'setTel'},
                 {field:'companyName',title:'所属公司',width:200},
                 {field:'tel',title:'手机',width:200, event: 'setMobile'},
                 {field:'address',title:'实际地址',width:200},
                 {field:'nowAddress',title:'暂住地址',width:200,event: 'setNowAddress'},
                 {field:'identifyNumber',title:'身份证号',width:200},
+                {field:'status',title:'状态',width:80,templet: '.statusTpl'},
                 {field:'other',title:'其他',width:80},
                 {field:'uT',title:'操作时间',width:80},
                 {field:'uUName',title:'操作人',width:80},
@@ -156,7 +157,7 @@
             var tel = $("#tel").val();
             var companyId = $("#companyId").val();
             var status = $("#status").val();
-            table.reload('testReload',{where:{name:name,mobile:tel,companyId:companyId,status:status}});
+            table.reload('client',{where:{name:name,mobile:tel,companyId:companyId,status:status}});
         }};
         $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});
 
@@ -181,26 +182,36 @@
                     layer.close(index);
                 });
             } else if(obj.event === 'edit'){
+                var editData = {
+                    companyList : companyList,
+                    data : data
+                }
                 layer.open({
                     type: 1,
-                    area: ['800px', '350px'],
+                    area: ['800px', '500px'],
                     title: ['修改公司信息', 'font-size:18px;'],
                     skin: 'layui-layer-molv',
-                    content: getContent(data),
+                    content: getContent(editData,$("#editTemplate").html()),
                     btn: ['确认'],
                     yes: function(index, layero) {
                         var dataOfEdit = {
                             id : data.id,
-                            companyName : $("#addAndEditTmpl #nameEdit").val(),
-                            crew : $("#addAndEditTmpl #crewEdit").val(),
-                            status : $("#addAndEditTmpl .status").val()
+                            name : $("#editTmpl #name").val(),
+                            companyId : $("#editTmpl #companyId").val(),
+                            mobile : $("#editTmpl #mobile").val(),
+                            tel : $("#editTmpl #tel").val(),
+                            status : $("#editTmpl #status").val(),
+                            address : $("#editTmpl #address").val(),
+                            nowAddress : $("#editTmpl #nowAddress").val(),
+                            identifyNumber : $("#editTmpl #identifyNumber").val(),
+                            other : $("#editTmpl #other").val()
                         }
                         $.post({
                             url:API.update,
                             data:dataOfEdit,
                             success:function (result) {
                                 if (result.code == 0){
-                                    table.reload('companyTable');
+                                    table.reload('client');
                                 }
                                 layer.close(index);
                                 layer.msg(result.msg);
@@ -215,10 +226,10 @@
         $(".add").click(function () {
             layer.open({
                 type: 1,
-                area: ['800px', '400px'],
+                area: ['800px', '500px'],
                 title: ['新增客户', 'font-size:18px;'],
                 skin: 'layui-layer-molv',
-                content: getContent(companyList),
+                content: getContent(companyList,$("#addTemplate").html()),
                 btn: ['确认'],
                 yes: function(index, layero) {
                     var dataOfAdd = {
@@ -249,9 +260,9 @@
         });
 
         //获取新增页面的
-        function getContent(data) {
+        function getContent(data,html) {
             var result = null;
-            laytpl($("#addTemplate").html()).render(data, function(html){
+            laytpl(html).render(data, function(html){
                 result = html;
             });
             return result;
@@ -261,20 +272,19 @@
 </script>
 
 <!--状态模板-->
-<script type="text/html" class="statusTpl" hidden>
+<script type="text/html" class="statusTpl">
     {{#  if(d.status === 0){ }}
     <span style="color: #5FB878;">有效</span>
     {{#  } else { }}
     无效
     {{#  } }}
 </script>
-
-<!--编辑模板-->
+<!--表格-编辑模板-->
 <script type="text/html" id="barRender">
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
-
+<!--添加模板-->
 <script type="text/html" id="addTemplate">
 <!--添加人员信息的模版-->
 <div style="margin: 20px">
@@ -358,6 +368,91 @@
         </div>
     </div>
 </div>
+</script>
+<!--编辑模板-->
+<script type="text/html" id="editTemplate">
+    <!--添加人员信息的模版-->
+    <div style="margin: 20px">
+        <div style="margin: 10px" id="editTmpl">
+            <div class="layui-form-item layui-form layui-form-pane">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input value="{{ d.data.name }}" id="name" type="text" required  lay-verify="required" name="name" autocomplete="off" placeholder="请输入姓名" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-inline">
+                        <input value="{{ d.data.tel }}" id="tel" type="text" name="tel" autocomplete="off" placeholder="请输入电话" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机</label>
+                    <div class="layui-input-block">
+                        <input value="{{ d.data.mobile }}" id="mobile" type="text" required  lay-verify="required" name="mobile" autocomplete="off" placeholder="请输入手机" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">实际地址</label>
+                    <div class="layui-input-inline">
+                        <input value="{{ d.data.address }}" id="address" type="text" required  lay-verify="required" name="address" autocomplete="off" placeholder="请输入实际地址" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">暂住地址</label>
+                    <div class="layui-input-block">
+                        <input value="{{ d.data.nowAddress }}" id="nowAddress" type="text" name="nowAddress" autocomplete="off" placeholder="请输入暂住地址" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">身份证号</label>
+                    <div class="layui-input-inline">
+                        <input value="{{ d.data.identifyNumber }}" id="identifyNumber" type="text" required  lay-verify="required" name="identifyNumber" autocomplete="off" placeholder="请输入身份证" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">其他</label>
+                    <div class="layui-input-inline">
+                        <input value="{{ d.data.other }}" id="other" type="text" name="other" autocomplete="off" placeholder="其他备注信息" class="layui-input" style="width: 500px;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form layui-form-pane">
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select value="{{ d.data.status }}" id="status" name="status" required lay-filter="status_add_edit">
+                            <option value=0>有效</option>
+                            <option value=1>无效</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">所属公司</label>
+                    <div class="layui-input-inline">
+                        <select value="{{ d.data.companyId }}" id="companyId" name="companyId" lay-filter="status_add_edit">
+                            {{#  layui.each(d.companyList, function(index, item){ }}
+                            <option value='{{item.id}}'>{{item.companyName}}</option>
+                            {{#  }); }}
+                            {{#  if(d.length === 0){ }}
+                            无数据
+                            {{#  } }}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </script>
 
 </html>
