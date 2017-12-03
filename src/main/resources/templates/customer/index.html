@@ -69,9 +69,9 @@
                         <label class="layui-form-label">状态</label>
                         <div class="layui-input-block">
                             <select name="status" lay-filter="aihao" id="status">
+                                <option value="">全部</option>
                                 <option value="0">有效</option>
                                 <option value="1">无效</option>
-                                <option value="">全部</option>
                             </select>
                         </div>
                     </div>
@@ -107,7 +107,8 @@
     var API = {
         search: "/customer/getData",
         add   : "/customer/add",
-        update: "/customer/update"
+        update: "/customer/update",
+        delete: "/customer/delete"
     }
     var $ =layui.$;
 
@@ -163,7 +164,6 @@
 
 
         /*操作事件*/
-        //监听工具条
         table.on('tool(user)', function(obj){
             var data = obj.data;
             if(obj.event === 'del'){
@@ -242,13 +242,21 @@
                         other           : $("#addAndEditTmpl #other").val(),
                         status          : $("#addAndEditTmpl #status").val(),
                         companyId       : $("#addAndEditTmpl #companyId").val()
+                    };
+                    var isOk = checkParam(dataOfAdd);
+                    if (!isOk){
+                        return;
                     }
                     $.post({
                         url:API.add,
                         data:dataOfAdd,
                         success:function (result) {
                             if (result.code == 0){
-                                table.reload('client');
+                                var name =$('#name').val();
+                                var tel = $("#tel").val();
+                                var companyId = $("#companyId").val();
+                                var status = $("#status").val();
+                                table.reload('client',{where:{name:name,mobile:tel,companyId:companyId,status:status}});
                             }
                             layer.close(index);
                             layer.msg(result.msg);
@@ -258,6 +266,26 @@
             });
             form.render('select');
         });
+
+        function checkParam(data) {
+            if(null == data.name || '' == data.name){
+                layer.msg('姓名不能为空');
+                return false;
+            }
+            if(null == data.mobile || '' == data.mobile){
+                layer.msg('手机号不能为空');
+                return false;
+            }
+            if(null == data.identifyNumber || '' == data.identifyNumber){
+                layer.msg('身份证号不能为空！');
+                return false;
+            }
+            if(null == data.companyId || '' == data.companyId){
+                layer.msg('所属公司不能为空不能为空！');
+                return false;
+            }
+            return true;
+        }
 
         //获取新增页面的
         function getContent(data,html) {
@@ -292,30 +320,30 @@
         <div class="layui-form-item layui-form layui-form-pane">
 
             <div class="layui-inline">
-                <label class="layui-form-label">姓名</label>
+                <label class="layui-form-label">姓名*</label>
                 <div class="layui-input-block">
-                    <input id="name" type="text" required  lay-verify="required" name="name" autocomplete="off" placeholder="请输入姓名" class="layui-input"/>
+                    <input id="name" type="text" required  lay-verify="notBlank" name="name" autocomplete="off" placeholder="请输入姓名" class="layui-input"/>
                 </div>
             </div>
 
             <div class="layui-inline">
                 <label class="layui-form-label">电话</label>
                 <div class="layui-input-inline">
-                    <input id="tel" type="text" name="tel" autocomplete="off" placeholder="请输入电话" class="layui-input"/>
+                    <input id="tel" type="text" name="tel" autocomplete="off" placeholder="请输入电话" class="layui-input" />
                 </div>
             </div>
 
             <div class="layui-inline">
-                <label class="layui-form-label">手机</label>
+                <label class="layui-form-label">手机*</label>
                 <div class="layui-input-block">
-                     <input id="mobile" type="text" required  lay-verify="required" name="mobile" autocomplete="off" placeholder="请输入手机" class="layui-input"/>
+                     <input id="mobile" type="text" required  lay-verify="notBlank" name="mobile" autocomplete="off" placeholder="请输入手机" class="layui-input"/>
                  </div>
             </div>
 
             <div class="layui-inline">
-                <label class="layui-form-label">实际地址</label>
+                <label class="layui-form-label">实际地址*</label>
                 <div class="layui-input-inline">
-                    <input id="address" type="text" required  lay-verify="required" name="address" autocomplete="off" placeholder="请输入实际地址" class="layui-input"/>
+                    <input id="address" type="text" required  lay-verify="notBlank" name="address" autocomplete="off" placeholder="请输入实际地址" class="layui-input"/>
                 </div>
             </div>
 
@@ -327,9 +355,9 @@
             </div>
 
             <div class="layui-inline">
-                <label class="layui-form-label">身份证号</label>
+                <label class="layui-form-label">身份证号*</label>
                 <div class="layui-input-inline">
-                    <input id="identifyNumber" type="text" required  lay-verify="required" name="identifyNumber" autocomplete="off" placeholder="请输入身份证" class="layui-input"/>
+                    <input id="identifyNumber" type="text" required  lay-verify="notBlank" name="identifyNumber" autocomplete="off" placeholder="请输入身份证" class="layui-input"/>
                 </div>
             </div>
 
@@ -342,9 +370,9 @@
         </div>
         <div class="layui-form-item layui-form layui-form-pane">
             <div class="layui-inline">
-                <label class="layui-form-label">状态</label>
+                <label class="layui-form-label">状态*</label>
                 <div class="layui-input-inline">
-                    <select id="status" name="status" required lay-filter="status_add_edit">
+                    <select id="status" name="status" required  lay-verify="notBlank">
                         <option value=0>有效</option>
                         <option value=1>无效</option>
                     </select>
@@ -353,9 +381,9 @@
 
 
             <div class="layui-inline">
-                <label class="layui-form-label">所属公司</label>
+                <label class="layui-form-label">所属公司*</label>
                 <div class="layui-input-inline">
-                    <select id="companyId" name="companyId" lay-filter="status_add_edit">
+                    <select id="companyId" name="companyId" required  lay-verify="notBlank">
                         {{#  layui.each(d, function(index, item){ }}
                         <option value='{{item.id}}'>{{item.companyName}}</option>
                         {{#  }); }}

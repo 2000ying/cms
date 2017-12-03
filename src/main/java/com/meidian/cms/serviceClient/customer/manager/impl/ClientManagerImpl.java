@@ -75,18 +75,84 @@ public class ClientManagerImpl implements ClientManager {
     @Override
     public Boolean updateClient(Client client) {
         Client clientSave = clientDao.findOne(client.getId());
-        clientSave.setCompanyName(client.getCompanyName());
-        clientSave.setuT(client.getuT());
-        clientSave.setuUName(client.getuUName());
-        clientSave.setAddress(client.getAddress());
-        clientSave.setIdentifyNumber(client.getIdentifyNumber());
-        clientSave.setTel(client.getTel());
-        clientSave.setCompanyId(client.getCompanyId());
-        clientSave.setStatus(client.getStatus());
-        clientSave.setNowAddress(client.getNowAddress());
-        clientSave.setMobile(client.getMobile());
-        clientSave.setName(client.getName());
-        clientSave.setOther(client.getOther());
+        if (!StringUtils.isEmpty(client.getCompanyName())){
+            clientSave.setCompanyName(client.getCompanyName());
+        }
+        if (null != client.getuT()){
+            clientSave.setuT(client.getuT());
+        }
+        if (!StringUtils.isEmpty(client.getuUName())){
+            clientSave.setuUName(client.getuUName());
+        }
+        if (null != client.getuU()){
+            clientSave.setuU(client.getuU());
+        }
+        if (!StringUtils.isEmpty(client.getAddress())){
+            clientSave.setAddress(client.getAddress());
+        }
+        if (!StringUtils.isEmpty(client.getIdentifyNumber())){
+            clientSave.setIdentifyNumber(client.getIdentifyNumber());
+        }
+        if (!StringUtils.isEmpty(client.getTel())){
+            clientSave.setTel(client.getTel());
+        }
+        if (!StringUtils.isEmpty(client.getCompanyId())){
+            clientSave.setCompanyId(client.getCompanyId());
+        }
+        if (!StringUtils.isEmpty(client.getTel())){
+            clientSave.setStatus(client.getStatus());
+        }
+        if (!StringUtils.isEmpty(client.getNowAddress())){
+            clientSave.setNowAddress(client.getNowAddress());
+        }
+        if (!StringUtils.isEmpty(client.getMobile())){
+            clientSave.setMobile(client.getMobile());
+        }
+        if (!StringUtils.isEmpty(client.getName())){
+            clientSave.setName(client.getName());
+        }
+        if (!StringUtils.isEmpty(client.getOther())){
+            clientSave.setOther(client.getOther());
+        }
+
+        clientDao.save(clientSave);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean deleteClient(Client client) {
+        Client clientSave = clientDao.findOne(client.getId());
+        clientSave.setIsDeleted(1);
+        if (null != client.getuT()){
+            clientSave.setuT(client.getuT());
+        }
+        if (!StringUtils.isEmpty(client.getuUName())){
+            clientSave.setuUName(client.getuUName());
+        }
+        if (null != client.getuU()){
+            clientSave.setuU(client.getuU());
+        }
+        clientDao.save(clientSave);
+        return Boolean.TRUE;
+    }
+
+    /**
+     * 根据公司id获取人员信息
+     * @param companyId
+     * @return
+     */
+    @Override
+    public List<Client> getClientByCompanyId(Long companyId) {
+        return clientDao.getClientByCompanyIdAndIsDeleted(companyId,0);
+    }
+
+    /**
+     * 根据id获取客户信息
+     * @param id
+     * @return
+     */
+    @Override
+    public Client getClientById(Long id) {
+        return clientDao.getClientById(id);
     }
 }

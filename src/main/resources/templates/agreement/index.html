@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"    xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>test</title>
@@ -16,7 +16,7 @@
                 <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
                 <li class="layui-nav-item"><a href="/company/index">公司管理</a></li>
                 <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
-                <li class="layui-nav-item"><a href="/remind/index">提醒</a></li>
+                <li class="layui-nav-item"><a href="/remind/index">工单</a></li>
             </ul>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
@@ -43,19 +43,19 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="name" autocomplete="off" class="layui-input" id="name"/>
+                            <input type="text" name="userName" autocomplete="off" class="layui-input" id="userName"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">电话</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="tel" autocomplete="off" class="layui-input" id="tel"/>
+                            <input type="text" name="mobile" autocomplete="off" class="layui-input" id="mobile"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">车牌号</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="car_number" autocomplete="off" class="layui-input" id="tel"/>
+                            <input type="text" name="busNumber" autocomplete="off" class="layui-input" id="busNumber"/>
                         </div>
                     </div>
                 </div>
@@ -68,6 +68,16 @@
                         <div class="layui-form-mid">-</div>
                         <div class="layui-input-inline" style="width: 100px;">
                             <input type="text" id="endTime" name="endTime" placeholder="结束时间" autocomplete="off" class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">公司</label>
+                        <div class="layui-input-block">
+                            <select name="companyId" lay-filter="aihao" id="companyId">
+                                <option value>全部</option>
+                                <option th:each="company : ${companyList}"
+                                        th:value="${company.id}" th:text="${company.companyName}"></option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -83,55 +93,297 @@
             <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">
                 <legend>显示</legend>
             </fieldset>
-            <button class="layui-btn add">添加</button>
-            <button class="layui-btn layui-btn-danger delete">删除</button>
+            <button class="layui-btn add">添加合同</button>
             <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
         </div>
     </div>
 </div>
 </body>
 <script src="/js/layui/layui.all.js"></script>
-<script >
+<script src="/js/common/common.js"></script>
+<script  th:inline="javascript">
+    /*<![CDATA[*/
+    var companyList = [[${companyList}]];
+    /*]]>*/
     var API = {
-        search: "/customer/getData"
+        search: "/agreement/getData",
+        getCustomersAndCarsByCompanyId: "/agreement/getCustomersAndCarsByCompanyId",
+        add: "/agreement/add",
+        deleted: "/agreement/deleted"
     }
-
-    layui.use('table',function(){
+    var laydate = layui.laydate;
+    layui.use(['table','laytpl','form'],function(){
         var table =layui.table;
+        var form = layui.form;
+        var laytpl = layui.laytpl;
         table.render({
             elem:'#LAY_table_user',
             url:API.search,
             cols:[[{checkbox:true,fixed:true},
-                {field:'id',title:'ID',width:80,fixed:true},
                 {field:'userName',title:'姓名',width:80},
-                {field:'tel',title:'电话',width:80},
-                {field:'mobile',title:'手机',width:80},
-                {field:'realAddress',title:'车牌号',width:200},
-                {field:'nowAddress',title:'签约入户时间',width:200},
-                {field:'identify',title:'押金',width:200},
+                {field:'mobile',title:'手机',width:200},
+                {field:'busNumber',title:'车牌号',width:100},
+                {field:'cashPledge',title:'押金',width:80},
+                {field:'companyName',title:'公司',width:200},
+                {field:'contractTime',title:'签约入户时间',width:200},
                 {field:'uT',title:'操作时间',width:80},
                 {field:'uPName',title:'操作人',width:80},
-                {field:'uPName',title:'操作',width:80}
+                {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
             ]],
-            id:'testReload',
+            id:'contract',
             page:true,
             height:500
         });
-        var $ =layui.$, active ={reload:function(){
-            var name =$('#name');
-            var tel = $("#tel");
-            table.reload('testReload',{where:{key:{name:name.val(),tel:tel.val()}}});
+        var active ={reload:function(){
+            var userName =$('#userName').val();
+            var mobile = $("#mobile").val();
+            var busNumber =$('#busNumber').val();
+            var companyId = $("#companyId").val();
+            var beginTime = $("#beginTime").val();
+            var endTime = $("#endTime").val();
+            table.reload('contract',{where:{userName:userName,
+                mobile:mobile,
+                busNumber:busNumber,
+                companyId:companyId,
+                beginTime:beginTime,
+                endTime:endTime
+            }});
         }};
-        $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});});
+        $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});
+
+        form.on('select(linkage)', function(data){
+            //根据公司id获取公司所在的人员， 车辆
+            var companyId = data.value;
+            var param = {
+                companyId:companyId
+            }
+            postData(API.getCustomersAndCarsByCompanyId,param,changeCarAndClient);
+        });
+
+        function changeCarAndClient(data) {
+            var body = data.body;
+            //获取车辆信息
+            var cars = body.cars;
+            var clients = body.clients;
+
+            //绘制option
+            if (null != cars && cars.length > 0){
+                for (var i = 0 ;i < cars.length; i++){
+                    var $option =  $('<option value='+cars[i].id+'>'+ cars[i].busNumber+'</option>');
+                    $('#carId').append($option);
+                }
+            }
+            if (null != clients && clients.length > 0){
+                for (var i= 0;i < clients.length;i++){
+                    var $option =  $('<option value='+clients[i].id+'>'+ clients[i].name + '-' + clients[i].mobile +'</option>');
+                    $('#userId').append($option);
+                }
+            }
+            form.render('select');
+        }
+
+        /*新增*/
+        $(".add").click(function () {
+            layer.open({
+                type: 1,
+                area: ['800px', '500px'],
+                title: ['新增车辆', 'font-size:18px;'],
+                skin: 'layui-layer-molv',
+                content: getContent(companyList,$("#addTemplate").html()),
+                btn: ['确认'],
+                yes: function(index, layero) {
+                    var dataOfAdd = {
+                        userId                      : $("#addAndEditTmpl #userId").val(),
+                        contractTimeStr                : $("#addAndEditTmpl #contractTimeStr").val(),
+                        carId                       : $("#addAndEditTmpl #carId").val(),
+                        companyId                   : $("#addAndEditTmpl #companyId").val(),
+                        cashPledge                  : $("#addAndEditTmpl #cashPledge").val()
+                    };
+                    var isOk = checkParam(dataOfAdd);
+                    if (!isOk){
+                        return;
+                    }
+                    $.post({
+                        url:API.add,
+                        data:dataOfAdd,
+                        success:function (result) {
+                            if (result.code == 0){
+                                var busNumber = $("#busNumber").val();
+                                var companyId = $("#companyId").val();
+                                var status = $("#status").val();
+                                var beginTime = $("#beginTime").val();
+                                var endTime = $("#endTime").val();
+                                table.reload('car',{where:{busNumber:busNumber,
+                                    companyId:companyId,
+                                    status:status,
+                                    beginTime:beginTime,
+                                    endTime:endTime
+                                }});
+                            }
+                            layer.close(index);
+                            layer.msg(result.msg);
+                        }
+                    })
+                }
+            });
+            form.render('select');
+            laydate.render({
+                elem: '#contractTimeStr'
+            });
+        });
+        function checkParam(data) {
+            if(null == data.userId || '' == data.userId){
+                layer.msg('请选择客户');
+                return false;
+            }
+            if(null == data.contractTimeStr || '' == data.contractTimeStr){
+                layer.msg('请选择入户时间');
+                return false;
+            }
+            if(null == data.carId || '' == data.carId){
+                layer.msg('请选择车辆！');
+                return false;
+            }
+            if(null == data.companyId || '' == data.companyId){
+                layer.msg('请选择公司！');
+                return false;
+            }
+            return true;
+        }
+        //获取新增页面的
+        function getContent(data,html) {
+            var result = null;
+            laytpl(html).render(data, function(html){
+                result = html;
+            });
+            return result;
+        }
+
+        /*操作事件*/
+        table.on('tool(user)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除么', function(index){
+                    $.post({
+                        url:API.delete,
+                        data:{id:data.id},
+                        success:function (result) {
+                            if (result.code == 0){
+                                table.reload('car');
+                            }
+                            layer.close(index);
+                            layer.msg(result.msg);
+                        }
+                    })
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                var editData = {
+                    companyList : companyList,
+                    data : data
+                }
+                layer.open({
+                    type: 1,
+                    area: ['800px', '500px'],
+                    title: ['收费', 'font-size:18px;'],
+                    skin: 'layui-layer-molv',
+                    content: getContent(editData,$("#editTemplate").html()),
+                    btn: ['确认'],
+                    yes: function(index, layero) {
+                        var dataOfEdit = {
+                            id : data.id,
+                            busNumber : $("#editTmpl #busNumber").val(),
+                            companyId : $("#editTmpl #companyId").val(),
+                            engineNumber : $("#editTmpl #engineNumber").val(),
+                            vehicleIdentificationNumber : $("#editTmpl #vehicleIdentificationNumber").val(),
+                            operationCertificate : $("#editTmpl #operationCertificate").val(),
+                            carType : $("#editTmpl #carType").val(),
+                            loadCapacity : $("#editTmpl #loadCapacity").val(),
+                            status : $("#editTmpl #status").val(),
+                            other : $("#editTmpl #other").val()
+                        }
+                        $.post({
+                            url:API.update,
+                            data:dataOfEdit,
+                            success:function (result) {
+                                if (result.code == 0){
+                                    table.reload('car');
+                                }
+                                layer.close(index);
+                                layer.msg(result.msg);
+                            }
+                        })
+                    }
+                });
+                form.render('select');
+            }
+        });
+
+    });
 
     /*时间拾取器*/
-    var laydate = layui.laydate;
     laydate.render({
         elem: '#beginTime'
     });
     laydate.render({
         elem: '#endTime'
     });
+
 </script>
 
+<!--表格-编辑模板-->
+<script type="text/html" id="barRender">
+    <a class="layui-btn layui-btn-mini" lay-event="edit">收款</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+<!--添加模板-->
+<script type="text/html" id="addTemplate">
+    <!--添加人员信息的模版-->
+    <div style="margin: 20px">
+        <div style="margin: 10px" id="addAndEditTmpl">
+            <div class="layui-form-item layui-form layui-form-pane">
+                <div class="layui-inline">
+                    <label class="layui-form-label">所属公司*</label>
+                    <div class="layui-input-inline">
+                        <select id="companyId" name="companyId" required  lay-filter="linkage">
+                            <option>请选择公司</option>
+                            {{#  layui.each(d, function(index, item){ }}
+                            <option value='{{item.id}}'>{{item.companyName}}</option>
+                            {{#  }); }}
+                            {{#  if(d.length === 0){ }}
+                            无数据
+                            {{#  } }}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">客户*</label>
+                    <div class="layui-input-inline">
+                        <select id="userId" name="userd" required lay-search>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">车辆*</label>
+                    <div class="layui-input-inline">
+                        <select id="carId" name="carId" required lay-search>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">入户时间*</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="contractTimeStr" name="contractTimeStr" placeholder="入户时间" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">押金*</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="cashPledge" name="cashPledge" placeholder="押金" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
 </html>

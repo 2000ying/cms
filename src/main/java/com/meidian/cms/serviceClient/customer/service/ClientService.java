@@ -39,4 +39,25 @@ public interface ClientService {
      * @return
      */
     ServiceResult<Boolean> updateClient(Client client);
+
+    /**
+     * 删除商户
+     * @param client
+     * @return
+     */
+    ServiceResult<Boolean> deleteClient(Client client);
+
+    /**
+     * 根据公司id获取人员信息
+     * @param companyId
+     * @return
+     */
+    ServiceResult<List<Client>> getClientByCompanyId(Long companyId);
+
+    /**
+     * 根据id获取客户信息
+     * @param id
+     * @return
+     */
+    ServiceResult<Client> getClientById(Long id);
 }

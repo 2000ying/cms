@@ -43,7 +43,6 @@ public class CustomerController extends BasicController{
     public ModelAndView index(HttpServletRequest request) throws BusinessException {
         ModelAndView mv = new ModelAndView();
         mv.addObject("companyList", getCompanyByUser(getUser(request)));
-        /*mv.addObject("companys", getCompanyByUser(getUser(request)));*/
         mv.setViewName("customer/index");
         return mv;
     }
@@ -121,5 +120,25 @@ public class CustomerController extends BasicController{
         client.setuU(user.getId());
         client.setuT(TimeUtil.getNowTimeStamp());
         client.setCompanyName(companyMap.get(client.getCompanyId()));
+    }
+
+    @ResponseBody
+    @RequestMapping("/delete")
+    public Result<List<Client>> delete(HttpServletRequest request,Client client) throws BusinessException {
+        User user = getUser(request);
+        this.makeDataForDelete(user,client);
+        ServiceResult<Boolean> serviceResult = clientService.deleteClient(client);
+        if (!serviceResult.getSuccess()){
+            return ResultUtils.returnFalse(serviceResult.getErrorCode(),serviceResult.getMessage());
+        }
+        return ResultUtils.returnTrue(serviceResult.getMessage());
+    }
+
+    private void makeDataForDelete(User user, Client client) throws BusinessException{
+        List<Company> companyList = getCompanyByUser(user);
+        client.setuUName(user.getName());
+        client.setuU(user.getId());
+        client.setuT(TimeUtil.getNowTimeStamp());
+        client.setIsDeleted(1);
     }
 }

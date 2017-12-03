@@ -24,4 +24,20 @@ public interface ClientManager {
     Boolean addClient(Client client);
 
     Boolean updateClient(Client client);
+
+    Boolean deleteClient(Client client);
+
+    /**
+     * 根据公司id获取人员信息
+     * @param companyId
+     * @return
+     */
+    List<Client> getClientByCompanyId(Long companyId);
+
+    /**
+     * 根据id获取客户信息
+     * @param id
+     * @return
+     */
+    Client getClientById(Long id);
 }

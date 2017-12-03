@@ -12,6 +12,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Title: com.meidian.cms.serviceClient.customer.dao<br>
  * Description: <br>
@@ -22,4 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
  *         2017/11/19
  */
 public interface ClientDao extends CrudRepository<Client,Long>, JpaSpecificationExecutor<Client>{
+
+    List<Client> getClientByCompanyIdAndIsDeleted(Long companyId, int i);
+
+    Client getClientById(Long id);
 }

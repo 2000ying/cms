@@ -61,4 +61,40 @@ public class ClientServiceImpl implements ClientService {
         }
         return ServiceResultUtil.returnTrue("更新成功！");
     }
+
+    /**
+     * 删除商户
+     * @param client
+     * @return
+     */
+    @Override
+    public ServiceResult<Boolean> deleteClient(Client client) {
+        Boolean isUpdate = clientManager.deleteClient(client);
+        if (!isUpdate){
+            return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"删除失败！");
+        }
+        return ServiceResultUtil.returnTrue("删除成功！");
+    }
+
+    /**
+     * 根据公司id获取人员信息
+     * @param companyId
+     * @return
+     */
+    @Override
+    public ServiceResult<List<Client>> getClientByCompanyId(Long companyId) {
+        List<Client> result = clientManager.getClientByCompanyId(companyId);
+        return ServiceResultUtil.returnTrue(result);
+    }
+
+    /**
+     * 根据id获取客户信息
+     * @param id
+     * @return
+     */
+    @Override
+    public ServiceResult<Client> getClientById(Long id) {
+        Client client = clientManager.getClientById(id);
+        return ServiceResultUtil.returnTrue(client);
+    }
 }

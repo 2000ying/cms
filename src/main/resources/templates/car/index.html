@@ -43,16 +43,28 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">车牌号</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="name" autocomplete="off" class="layui-input" id="name"/>
+                            <input id="busNumber" type="text" name="busNumber" autocomplete="off" class="layui-input" id="name"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">公司</label>
+                        <div class="layui-input-block">
+                            <select name="companyId" lay-filter="aihao" id="companyId">
+                                <option value>全部</option>
+                                <option th:each="company : ${companyList}"
+                                        th:value="${company.id}" th:text="${company.companyName}"></option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">状态</label>
                         <div class="layui-input-block">
-                            <select name="status" lay-filter="aihao">
+                            <select name="status" lay-filter="aihao" id="status">
+                                <option value="">全部</option>
                                 <option value="0">有效</option>
                                 <option value="1">无效</option>
-                                <option value="">全部</option>
                             </select>
                         </div>
                     </div>
@@ -65,49 +77,387 @@
 
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-            <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">>
+            <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">
                 <legend>显示</legend>
             </fieldset>
+            <!--添加按钮-->
+            <button class="layui-btn add">添加</button>
             <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
         </div>
     </div>
 </div>
 </body>
 <script src="/js/layui/layui.all.js"></script>
-<script >
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var companyList = [[${companyList}]];
+    /*]]>*/
     var API = {
-        search: "/customer/getData"
+        search  : "/car/getData",
+        add     : "/car/add",
+        update  : "/car/update",
+        delete  : "/car/delete"
     }
-
-    layui.use('table',function(){
+    var $ =layui.$;
+    layui.use(['table','laytpl','form'],function(){
         var table =layui.table;
+        var form = layui.form;
+        var laytpl = layui.laytpl;
         table.render({
             elem:'#LAY_table_user',
             url:API.search,
             cols:[[
-                {field:'id',title:'序号',width:80},
-                {field:'userName',title:'车型',width:80},
-                {field:'tel',title:'载重量',width:80},
-                {field:'mobile',title:'发动机号',width:80},
-                {field:'realAddress',title:'车架号',width:200},
-                {field:'nowAddress',title:'营运证',width:200},
-                {field:'identify',title:'车牌号',width:200},
+                {field:'busNumber',title:'车牌号',width:200},
+                {field:'companyName',title:'所属公司',width:200},
+                {field:'engineNumber',title:'发动机号',width:200},
+                {field:'vehicleIdentificationNumber',title:'车架号',width:200},
+                {field:'operationCertificate',title:'营运证',width:200},
+                {field:'carType',title:'车型',width:80},
+                {field:'loadCapacity',title:'载重量',width:80},
                 {field:'status',title:'状态',width:80},
                 {field:'other',title:'其他',width:80},
                 {field:'uT',title:'操作时间',width:80},
-                {field:'uPName',title:'操作人',width:80},
-                {field:'uPName',title:'操作',width:80}
+                {field:'uUName',title:'操作人',width:80},
+                {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
             ]],
-            id:'testReload',
+            id:'car',
             page:true,
             height:500
         });
-        var $ =layui.$, active ={reload:function(){
-            var name =$('#name');
-            var tel = $("#tel");
-            table.reload('testReload',{where:{key:{name:name.val(),tel:tel.val()}}});
+        var active ={reload:function(){
+            var busNumber = $("#busNumber").val();
+            var companyId = $("#companyId").val();
+            var status = $("#status").val();
+            table.reload('car',{where:{busNumber:busNumber,companyId:companyId,status:status}});
         }};
-        $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});});
+        $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});
+
+        /*新增*/
+        $(".add").click(function () {
+            layer.open({
+                type: 1,
+                area: ['800px', '500px'],
+                title: ['新增车辆', 'font-size:18px;'],
+                skin: 'layui-layer-molv',
+                content: getContent(companyList,$("#addTemplate").html()),
+                btn: ['确认'],
+                yes: function(index, layero) {
+                    var dataOfAdd = {
+                        carType                     : $("#addAndEditTmpl #carType").val(),
+                        loadCapacity                : $("#addAndEditTmpl #loadCapacity").val(),
+                        engineNumber                : $("#addAndEditTmpl #engineNumber").val(),
+                        vehicleIdentificationNumber : $("#addAndEditTmpl #vehicleIdentificationNumber").val(),
+                        operationCertificate        : $("#addAndEditTmpl #operationCertificate").val(),
+                        busNumber                   : $("#addAndEditTmpl #busNumber").val(),
+                        other                       : $("#addAndEditTmpl #other").val(),
+                        status                      : $("#addAndEditTmpl #status").val(),
+                        companyId                   : $("#addAndEditTmpl #companyId").val()
+                    };
+                    var isOk = checkParam(dataOfAdd);
+                    if (!isOk){
+                        return;
+                    }
+                    $.post({
+                        url:API.add,
+                        data:dataOfAdd,
+                        success:function (result) {
+                            if (result.code == 0){
+                                var busNumber = $("#busNumber").val();
+                                var companyId = $("#companyId").val();
+                                var status = $("#status").val();
+                                table.reload('car',{where:{busNumber:busNumber,companyId:companyId,status:status}});
+                            }
+                            layer.close(index);
+                            layer.msg(result.msg);
+                        }
+                    })
+                }
+            });
+            form.render('select');
+        });
+        function checkParam(data) {
+            if(null == data.carType || '' == data.carType){
+                layer.msg('车型不能为空');
+                return false;
+            }
+            if(null == data.loadCapacity || '' == data.loadCapacity){
+                layer.msg('装载量不能为空');
+                return false;
+            }
+            if(null == data.engineNumber || '' == data.engineNumber){
+                layer.msg('发动机号不能为空！');
+                return false;
+            }
+            if(null == data.vehicleIdentificationNumber || '' == data.vehicleIdentificationNumber){
+                layer.msg('车架号不能为空！');
+                return false;
+            }
+            if(null == data.operationCertificate || '' == data.operationCertificate){
+                layer.msg('营运证不能为空！');
+                return false;
+            }
+            if(null == data.busNumber || '' == data.busNumber){
+                layer.msg('车牌号不能为空！');
+                return false;
+            }
+            return true;
+        }
+        //获取新增页面的
+        function getContent(data,html) {
+            var result = null;
+            laytpl(html).render(data, function(html){
+                result = html;
+            });
+            return result;
+        }
+
+        /*操作事件*/
+        table.on('tool(user)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除么', function(index){
+                    $.post({
+                        url:API.delete,
+                        data:{id:data.id},
+                        success:function (result) {
+                            if (result.code == 0){
+                                table.reload('car');
+                            }
+                            layer.close(index);
+                            layer.msg(result.msg);
+                        }
+                    })
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                var editData = {
+                    companyList : companyList,
+                    data : data
+                }
+                layer.open({
+                    type: 1,
+                    area: ['800px', '500px'],
+                    title: ['修改公司信息', 'font-size:18px;'],
+                    skin: 'layui-layer-molv',
+                    content: getContent(editData,$("#editTemplate").html()),
+                    btn: ['确认'],
+                    yes: function(index, layero) {
+                        var dataOfEdit = {
+                            id : data.id,
+                            busNumber : $("#editTmpl #busNumber").val(),
+                            companyId : $("#editTmpl #companyId").val(),
+                            engineNumber : $("#editTmpl #engineNumber").val(),
+                            vehicleIdentificationNumber : $("#editTmpl #vehicleIdentificationNumber").val(),
+                            operationCertificate : $("#editTmpl #operationCertificate").val(),
+                            carType : $("#editTmpl #carType").val(),
+                            loadCapacity : $("#editTmpl #loadCapacity").val(),
+                            status : $("#editTmpl #status").val(),
+                            other : $("#editTmpl #other").val()
+                        }
+                        $.post({
+                            url:API.update,
+                            data:dataOfEdit,
+                            success:function (result) {
+                                if (result.code == 0){
+                                    table.reload('car');
+                                }
+                                layer.close(index);
+                                layer.msg(result.msg);
+                            }
+                        })
+                    }
+                });
+                form.render('select');
+            }
+        });
+
+    });
+
+
+</script>
+
+<!--状态模板-->
+<script type="text/html" class="statusTpl">
+    {{#  if(d.status === 0){ }}
+    <span style="color: #5FB878;">有效</span>
+    {{#  } else { }}
+    无效
+    {{#  } }}
+</script>
+<!--表格-编辑模板-->
+<script type="text/html" id="barRender">
+    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+<!--添加模板-->
+<script type="text/html" id="addTemplate">
+    <!--添加人员信息的模版-->
+    <div style="margin: 20px">
+        <div style="margin: 10px" id="addAndEditTmpl">
+            <div class="layui-form-item layui-form layui-form-pane">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">车牌号*</label>
+                    <div class="layui-input-block">
+                        <input id="busNumber" type="text" required  lay-verify="notBlank" name="busNumber" autocomplete="off" placeholder="请输入车牌号" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">车架号*</label>
+                    <div class="layui-input-inline">
+                        <input id="vehicleIdentificationNumber" type="text" name="vehicleIdentificationNumber" autocomplete="off" placeholder="请输入车架号" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">营运证*</label>
+                    <div class="layui-input-block">
+                        <input id="operationCertificate" type="text" required  lay-verify="notBlank" name="operationCertificate" autocomplete="off" placeholder="请输入营运证" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">车型*</label>
+                    <div class="layui-input-inline">
+                        <input id="carType" type="text" required  lay-verify="notBlank" name="carType" autocomplete="off" placeholder="请输入车型" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">载重量*</label>
+                    <div class="layui-input-block">
+                        <input id="loadCapacity" type="text" name="loadCapacity" autocomplete="off" placeholder="请输入暂住地址" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">发动机号*</label>
+                    <div class="layui-input-inline">
+                        <input id="engineNumber" type="text" required  lay-verify="notBlank" name="engineNumber" autocomplete="off" placeholder="请输入身份证" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">其他</label>
+                    <div class="layui-input-inline">
+                        <input id="other" type="text" name="other" autocomplete="off" placeholder="其他备注信息" class="layui-input" style="width: 500px;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form layui-form-pane">
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态*</label>
+                    <div class="layui-input-inline">
+                        <select id="status" name="status" required  lay-verify="notBlank">
+                            <option value=0>有效</option>
+                            <option value=1>无效</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">所属公司*</label>
+                    <div class="layui-input-inline">
+                        <select id="companyId" name="companyId" required  lay-verify="notBlank">
+                            {{#  layui.each(d, function(index, item){ }}
+                            <option value='{{item.id}}'>{{item.companyName}}</option>
+                            {{#  }); }}
+                            {{#  if(d.length === 0){ }}
+                            无数据
+                            {{#  } }}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!--编辑模板-->
+<script type="text/html" id="editTemplate">
+    <!--添加人员信息的模版-->
+    <div style="margin: 20px">
+        <div style="margin: 10px" id="editTmpl">
+            <div class="layui-form-item layui-form layui-form-pane">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">车牌号*</label>
+                    <div class="layui-input-block">
+                        <input id="busNumber" value="{{ d.data.busNumber }}" type="text" required  lay-verify="notBlank" name="busNumber" autocomplete="off" placeholder="请输入车牌号" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">车架号*</label>
+                    <div class="layui-input-inline">
+                        <input id="vehicleIdentificationNumber" value="{{ d.data.vehicleIdentificationNumber }}" type="text" name="vehicleIdentificationNumber" autocomplete="off" placeholder="请输入车架号" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">营运证*</label>
+                    <div class="layui-input-block">
+                        <input id="operationCertificate" value="{{ d.data.operationCertificate }}" type="text" required  lay-verify="notBlank" name="operationCertificate" autocomplete="off" placeholder="请输入营运证" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">车型*</label>
+                    <div class="layui-input-inline">
+                        <input id="carType" type="text" value="{{ d.data.carType }}" required  lay-verify="notBlank" name="carType" autocomplete="off" placeholder="请输入车型" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">载重量*</label>
+                    <div class="layui-input-block">
+                        <input id="loadCapacity" value="{{ d.data.loadCapacity }}" type="text" name="loadCapacity" autocomplete="off" placeholder="请输入暂住地址" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">发动机号*</label>
+                    <div class="layui-input-inline">
+                        <input id="engineNumber" value="{{ d.data.engineNumber }}" type="text" required  lay-verify="notBlank" name="engineNumber" autocomplete="off" placeholder="请输入身份证" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">其他</label>
+                    <div class="layui-input-inline">
+                        <input id="other" value="{{ d.data.other }}" type="text" name="other" autocomplete="off" placeholder="其他备注信息" class="layui-input" style="width: 500px;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form layui-form-pane">
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态*</label>
+                    <div class="layui-input-inline">
+                        <select id="status" value="{{ d.data.status }}" name="status" required  lay-verify="notBlank">
+                            <option value=0>有效</option>
+                            <option value=1>无效</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">所属公司*</label>
+                    <div class="layui-input-inline">
+                        <select id="companyId" value="{{ d.data.companyId }}" name="companyId" required  lay-verify="notBlank">
+                            {{#  layui.each(d.companyList, function(index, item){ }}
+                            <option value='{{item.id}}'>{{item.companyName}}</option>
+                            {{#  }); }}
+                            {{#  if(d.length === 0){ }}
+                            无数据
+                            {{#  } }}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </script>
 
 </html>
