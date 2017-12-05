@@ -92,4 +92,48 @@ public class ContractManagerImpl implements ContractManager {
         }
         return Boolean.TRUE;
     }
+
+    /**
+     * 删除合同
+     * @param contract
+     * @return
+     */
+    @Override
+    public Boolean deleteCarInfo(Contract contract) {
+        Contract contractSave = contractDao.findOne(contract.getId());
+        contractSave.setIsDeleted(1);
+        if (null != contract.getuT()){
+            contractSave.setuT(contract.getuT());
+        }
+        if (!StringUtils.isEmpty(contract.getuUName())){
+            contractSave.setuUName(contract.getuUName());
+        }
+        if (null != contract.getuU()){
+            contractSave.setuU(contract.getuU());
+        }
+        contractDao.save(contractSave);
+        return Boolean.TRUE;
+    }
+
+    /**
+     * 根据人员id获取合同信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Contract> getContractByUserId(Long userId) {
+        return contractDao.getContractByUserIdAndIsDeleted(userId,0);
+    }
+
+    /**
+     * 根据车辆id获取合同信息
+     *
+     * @param carId
+     * @return
+     */
+    @Override
+    public List<Contract> getContractByCarId(Long carId) {
+        return contractDao.getContractByCarIdAndIsDeleted(carId,0);
+    }
 }

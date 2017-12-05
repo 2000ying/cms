@@ -40,4 +40,18 @@ public interface ContractService {
      * @return
      */
     ServiceResult<Boolean> deleteContract(Contract contract);
+
+    /**
+     * 根据人员编号获取合同
+     * @param userId
+     * @return
+     */
+    ServiceResult<List<Contract>> getContractByUserId(Long userId);
+
+    /**
+     * 根据车辆id获取合同
+     * @param carId
+     * @return
+     */
+    ServiceResult<List<Contract>> getContractByCarId(Long carId);
 }

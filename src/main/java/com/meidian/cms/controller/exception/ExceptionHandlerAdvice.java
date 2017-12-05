@@ -18,6 +18,13 @@ public class ExceptionHandlerAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
 
+    @ExceptionHandler(BusinessException.class)
+    public Result handleException(BusinessException e) {
+        logger.error(e.getMessage(),e);
+        return ResultUtils.returnFalse(Integers.defaultIfNll(e.getErrorCode(),ErrorCode.BUSINESS_DEFAULT_ERROR.getCode()),
+                Strings.defaultIfNull(e.getMessage(),ErrorCode.BUSINESS_DEFAULT_ERROR.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public Result handleException(Exception e) {
         logger.error(e.getMessage(),e);
@@ -28,12 +35,5 @@ public class ExceptionHandlerAdvice {
     public Result handleException(IllegalArgumentException e) {
         logger.error(e.getMessage(),e);
         return ResultUtils.returnFalse(ErrorCode.PARAM_ERROR.getCode(), Strings.defaultIfNull(e.getMessage(),ErrorCode.PARAM_ERROR.getMessage()));
-    }
-
-    @ExceptionHandler(BusinessException.class)
-    public Result handleException(BusinessException e) {
-        logger.error(e.getMessage(),e);
-        return ResultUtils.returnFalse(Integers.defaultIfNll(e.getErrorCode(),ErrorCode.BUSINESS_DEFAULT_ERROR.getCode()),
-                Strings.defaultIfNull(e.getMessage(),ErrorCode.BUSINESS_DEFAULT_ERROR.getMessage()));
     }
 }

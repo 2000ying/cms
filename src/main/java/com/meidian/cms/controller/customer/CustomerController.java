@@ -1,5 +1,6 @@
 package com.meidian.cms.controller.customer;
 
+import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.Result;
 import com.meidian.cms.common.ServiceResult;
 import com.meidian.cms.common.exception.BusinessException;
@@ -7,6 +8,9 @@ import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.common.utils.ResultUtils;
 import com.meidian.cms.common.utils.TimeUtil;
 import com.meidian.cms.controller.basic.BasicController;
+import com.meidian.cms.serviceClient.agreement.Contract;
+import com.meidian.cms.serviceClient.agreement.service.ContractService;
+import com.meidian.cms.serviceClient.car.CarInfo;
 import com.meidian.cms.serviceClient.company.Company;
 import com.meidian.cms.serviceClient.customer.Client;
 import com.meidian.cms.serviceClient.customer.service.ClientService;
@@ -37,6 +41,9 @@ public class CustomerController extends BasicController{
 
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private ContractService contractService;
 
 
     @RequestMapping("/index")
@@ -126,12 +133,23 @@ public class CustomerController extends BasicController{
     @RequestMapping("/delete")
     public Result<List<Client>> delete(HttpServletRequest request,Client client) throws BusinessException {
         User user = getUser(request);
+        this.isCanRemove(client);
         this.makeDataForDelete(user,client);
         ServiceResult<Boolean> serviceResult = clientService.deleteClient(client);
         if (!serviceResult.getSuccess()){
             return ResultUtils.returnFalse(serviceResult.getErrorCode(),serviceResult.getMessage());
         }
         return ResultUtils.returnTrue(serviceResult.getMessage());
+    }
+
+    private void isCanRemove(Client client) throws BusinessException {
+        ServiceResult<List<Contract>> conListServiceResult = contractService.getContractByUserId(client.getId());
+        if (!conListServiceResult.getSuccess()){
+            throw new BusinessException("获取合同信息失败！", ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+        if (!CollectionUtil.isEmpty(conListServiceResult.getBody())){
+            throw new BusinessException("此客户已有合同，不允许删除，请先处理此客户的合同！",ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
     }
 
     private void makeDataForDelete(User user, Client client) throws BusinessException{

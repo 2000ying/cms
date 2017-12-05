@@ -1,5 +1,6 @@
 package com.meidian.cms.serviceClient.agreement.service.impl;
 
+import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.ServiceResult;
 import com.meidian.cms.common.utils.ServiceResultUtil;
 import com.meidian.cms.serviceClient.agreement.Contract;
@@ -61,6 +62,34 @@ public class ContractServiceImpl implements ContractService {
      */
     @Override
     public ServiceResult<Boolean> deleteContract(Contract contract) {
-        return null;
+        Boolean isUpdate = contractManager.deleteCarInfo(contract);
+        if (!isUpdate){
+            return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"删除失败！");
+        }
+        return ServiceResultUtil.returnTrue("删除成功！");
+    }
+
+
+    /**
+     * 根据人员编号获取合同
+     * @param userId
+     * @return
+     */
+    @Override
+    public ServiceResult<List<Contract>> getContractByUserId(Long userId) {
+        List<Contract> result = contractManager.getContractByUserId(userId);
+        return ServiceResultUtil.returnTrue(result);
+    }
+
+    /**
+     * 根据车辆id获取合同
+     *
+     * @param carId
+     * @return
+     */
+    @Override
+    public ServiceResult<List<Contract>> getContractByCarId(Long carId) {
+        List<Contract> result = contractManager.getContractByCarId(carId);
+        return ServiceResultUtil.returnTrue(result);
     }
 }

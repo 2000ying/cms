@@ -9,6 +9,8 @@ import com.meidian.cms.common.utils.ResultUtils;
 import com.meidian.cms.common.utils.TimeUtil;
 import com.meidian.cms.controller.basic.BasicController;
 import com.meidian.cms.controller.customer.CustomerController;
+import com.meidian.cms.serviceClient.agreement.Contract;
+import com.meidian.cms.serviceClient.agreement.service.ContractService;
 import com.meidian.cms.serviceClient.car.CarInfo;
 import com.meidian.cms.serviceClient.car.service.CarInfoService;
 import com.meidian.cms.serviceClient.company.Company;
@@ -39,6 +41,9 @@ public class CarController  extends BasicController {
 
     @Autowired
     private CarInfoService carInfoService;
+
+    @Autowired
+    private ContractService contractService;
 
 
     @RequestMapping("/index")
@@ -129,12 +134,24 @@ public class CarController  extends BasicController {
     @RequestMapping("/delete")
     public Result<Boolean> delete(HttpServletRequest request,CarInfo carInfo) throws BusinessException {
         User user = getUser(request);
+        //校验是否可以删除
+        this.isCanRemove(carInfo);
         this.makeDataForDelete(user,carInfo);
         ServiceResult<Boolean> serviceResult = carInfoService.deleteCarInfo(carInfo);
         if (!serviceResult.getSuccess()){
             return ResultUtils.returnFalse(serviceResult.getErrorCode(),serviceResult.getMessage());
         }
         return ResultUtils.returnTrue(serviceResult.getMessage());
+    }
+
+    private void isCanRemove(CarInfo carInfo) throws BusinessException {
+        ServiceResult<List<Contract>> conListServiceResult = contractService.getContractByCarId(carInfo.getId());
+        if (!conListServiceResult.getSuccess()){
+            throw new BusinessException("获取合同信息失败！",ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+        if (!CollectionUtil.isEmpty(conListServiceResult.getBody())){
+            throw new BusinessException("此车辆已有合同，不允许删除，请先处理此车辆的合同！",ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
     }
 
     private void makeDataForDelete(User user, CarInfo carInfo) throws BusinessException{

@@ -28,4 +28,25 @@ public interface ContractManager {
     Page<Contract> getPageByContract(Pageable pageable, Contract contract, List<Long> companyIds, Integer begin, Integer end);
 
     Boolean addContract(Contract contract);
+
+    /**
+     * 删除合同
+     * @param contract
+     * @return
+     */
+    Boolean deleteCarInfo(Contract contract);
+
+    /**
+     * 根据人员id获取合同信息
+     * @param userId
+     * @return
+     */
+    List<Contract> getContractByUserId(Long userId);
+
+    /**
+     * 根据车辆id获取合同信息
+     * @param carId
+     * @return
+     */
+    List<Contract> getContractByCarId(Long carId);
 }
