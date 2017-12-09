@@ -1,7 +1,8 @@
 package com.meidian.cms.serviceClient.fee.manager;
 
 import com.meidian.cms.serviceClient.fee.FeeInfo;
-import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Title: com.meidian.cms.serviceClient.fee.manager<br>
@@ -14,9 +15,12 @@ import org.springframework.data.domain.Page;
  */
 public interface FeeInfoManager {
     /**
-     * 根据合同地获取费用集合
+     * 根据合同id获取费用信息
      * @param contractId
      * @return
      */
-    Page<FeeInfo> getFeeInfoByContractId(Long contractId);
+    List<FeeInfo> getFeeInfoByContractId(Long contractId);
+
+    //添加费用
+    Boolean addFeeInfo(FeeInfo feeInfo);
 }

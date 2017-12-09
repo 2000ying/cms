@@ -10,4 +10,12 @@ public class Strings {
         }
         return target;
     }
+
+    public static Boolean isEmpty(String str){
+        return StringUtils.isEmpty(str);
+    }
+
+    public static Boolean isNotEmpty(String str){
+        return !StringUtils.isEmpty(str);
+    }
 }

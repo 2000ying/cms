@@ -18,6 +18,8 @@ import com.meidian.cms.serviceClient.car.service.CarInfoService;
 import com.meidian.cms.serviceClient.company.Company;
 import com.meidian.cms.serviceClient.customer.Client;
 import com.meidian.cms.serviceClient.customer.service.ClientService;
+import com.meidian.cms.serviceClient.fee.FeeInfo;
+import com.meidian.cms.serviceClient.fee.service.FeeInfoService;
 import com.meidian.cms.serviceClient.user.User;
 import com.meidian.cms.vo.TestVo;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -53,6 +55,9 @@ public class AgreementController  extends BasicController {
 
     @Autowired
     private CarInfoService carInfoService;
+
+    @Autowired
+    private FeeInfoService feeInfoService;
 
     @RequestMapping("/index")
     public ModelAndView index(HttpServletRequest request) throws BusinessException{
@@ -167,5 +172,58 @@ public class AgreementController  extends BasicController {
         contract.setuU(user.getId());
         contract.setuT(TimeUtil.getNowTimeStamp());
         contract.setIsDeleted(1);
+    }
+
+
+    @RequestMapping("/feeIndex")
+    public ModelAndView feeIndex(HttpServletRequest request,Long contractId) throws BusinessException{
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("contractId", contractId);
+        mv.setViewName("agreement/fee");
+        return mv;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/getFeeData")
+    public Result<FeeInfo> getFeeData(HttpServletRequest request, Long contractId) throws BusinessException {
+        ServiceResult<List<FeeInfo>> feeListServiceResult = feeInfoService.getFeeInfoByContractId(contractId);
+        return ResultUtils.returnTrue(feeListServiceResult.getBody());
+    }
+
+    @ResponseBody
+    @RequestMapping("/addFeeInfo")
+    public Result<FeeInfo> addFeeInfo(HttpServletRequest request, FeeInfo feeInfo,
+                                      String timeStr,String expireTimeStr,
+                                      String gradeInsuranceFeeTimeStr,
+                                      String gradeInsuranceFeeExpireTimeStr) throws BusinessException {
+        User user = getUser(request);
+        this.makeDataForAddFeeInfo(feeInfo,timeStr,expireTimeStr,gradeInsuranceFeeTimeStr,
+                gradeInsuranceFeeExpireTimeStr,user);
+        ServiceResult<Boolean> feeListServiceResult = feeInfoService.addFeeInfo(feeInfo);
+        return ResultUtils.returnTrue(feeListServiceResult.getMessage());
+    }
+
+    private void makeDataForAddFeeInfo(FeeInfo feeInfo, String timeStr, String expireTimeStr,
+                                       String gradeInsuranceFeeTimeStr, String gradeInsuranceFeeExpireTimeStr, User user) {
+        if (Strings.isNotEmpty(timeStr)){
+            feeInfo.setTime(TimeUtil.getDayUnixTimeStamp(timeStr));
+        }
+        if (Strings.isNotEmpty(expireTimeStr)){
+            feeInfo.setExpireTime(TimeUtil.getDayUnixTimeStamp(expireTimeStr));
+        }
+        if (Strings.isNotEmpty(gradeInsuranceFeeTimeStr)){
+            feeInfo.setGradeInsuranceFeeTime(TimeUtil.getDayUnixTimeStamp(gradeInsuranceFeeTimeStr));
+        }
+        if (Strings.isNotEmpty(gradeInsuranceFeeExpireTimeStr)){
+            feeInfo.setGradeInsuranceFeeExpireTime(TimeUtil.getDayUnixTimeStamp(gradeInsuranceFeeExpireTimeStr));
+        }
+        /*-----*/
+        feeInfo.setcUName(user.getName());
+        feeInfo.setcU(user.getId());
+        feeInfo.setuUName(user.getName());
+        feeInfo.setuU(user.getId());
+        feeInfo.setuT(TimeUtil.getNowTimeStamp());
+        feeInfo.setcT(TimeUtil.getNowTimeStamp());
     }
 }

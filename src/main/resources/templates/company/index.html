@@ -16,7 +16,7 @@
                 <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
                 <li class="layui-nav-item"><a href="/company/index">公司管理</a></li>
                 <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
-                <li class="layui-nav-item"><a href="/remind/index">提醒</a></li>
+                <li class="layui-nav-item"><a href="/remind/index">工单</a></li>
             </ul>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
@@ -77,6 +77,7 @@
 </div>
 </body>
 <script src="/js/layui/layui.all.js"></script>
+<script src="/js/common/common.js"></script>
 <script >
     var API = {
         search: "/company/getData",
@@ -252,6 +253,11 @@
 <script type="text/html" id="barRender">
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+
+<!--更新时间模板-->
+<script type="text/html" id="uTTemplate">
+    {{formatTimestamp(d.uT,'yyyy-MM-dd')}}
 </script>
 
 </html>

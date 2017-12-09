@@ -16,7 +16,7 @@
                 <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
                 <li class="layui-nav-item"><a href="/company/index">公司管理</a></li>
                 <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
-                <li class="layui-nav-item"><a href="/remind/index">提醒</a></li>
+                <li class="layui-nav-item"><a href="/remind/index">工单</a></li>
             </ul>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
@@ -99,6 +99,7 @@
 </body>
 
 <script src="/js/layui/layui.all.js"></script>
+<script src="/js/common/common.js"></script>
 
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -131,7 +132,7 @@
                 {field:'identifyNumber',title:'身份证号',width:200},
                 {field:'status',title:'状态',width:80,templet: '.statusTpl'},
                 {field:'other',title:'其他',width:80},
-                {field:'uT',title:'操作时间',width:80},
+                {field:'uT',title:'操作时间',width:110,templet:'#uTTemplate'},
                 {field:'uUName',title:'操作人',width:80},
                 {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
             ]],
@@ -481,6 +482,10 @@
             </div>
         </div>
     </div>
+</script>
+<!--更新时间模板-->
+<script type="text/html" id="uTTemplate">
+    {{formatTimestamp(d.uT,'yyyy-MM-dd')}}
 </script>
 
 </html>

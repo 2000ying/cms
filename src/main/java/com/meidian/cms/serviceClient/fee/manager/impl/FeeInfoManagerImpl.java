@@ -4,8 +4,9 @@ import com.meidian.cms.serviceClient.fee.FeeInfo;
 import com.meidian.cms.serviceClient.fee.dao.FeeInfoDao;
 import com.meidian.cms.serviceClient.fee.manager.FeeInfoManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Title: com.meidian.cms.serviceClient.fee.manager.impl<br>
@@ -21,9 +22,22 @@ public class FeeInfoManagerImpl implements FeeInfoManager {
 
     @Autowired
     private FeeInfoDao feeInfoDao;
+    /**
+     * 根据合同id获取费用信息
+     * @param contractId
+     * @return
+     */
+    @Override
+    public List<FeeInfo> getFeeInfoByContractId(Long contractId) {
+        return feeInfoDao.getFeeInfoByContractIdAndIsDeleted(contractId,0);
+    }
 
     @Override
-    public Page<FeeInfo> getFeeInfoByContractId(Long contractId) {
-        return feeInfoDao.getFeeInfoByContractIdAAndIsDeleted(contractId,0);
+    public Boolean addFeeInfo(FeeInfo feeInfo) {
+        FeeInfo c = feeInfoDao.save(feeInfo);
+        if (c == null){
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 }

@@ -124,10 +124,10 @@
                 {field:'mobile',title:'手机',width:200},
                 {field:'busNumber',title:'车牌号',width:100},
                 {field:'cashPledge',title:'押金',width:80},
-                {field:'companyName',title:'公司',width:200},
-                {field:'contractTime',title:'签约入户时间',width:200},
-                {field:'uT',title:'操作时间',width:80},
-                {field:'uPName',title:'操作人',width:80},
+                {field:'companyName',title:'公司',width:150},
+                {field:'contractTime',title:'签约入户时间',width:150 ,templet:'#contractTimeTemplate'},
+                {field:'uT',title:'操作时间',width:150 ,templet:'#uTTemplate'},
+                {field:'uUName',title:'操作人',width:80},
                 {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
             ]],
             id:'contract',
@@ -277,46 +277,21 @@
                     layer.close(index);
                 });
             } else if(obj.event === 'edit'){
-                var editData = {
-                    companyList : companyList,
-                    data : data
-                }
                 layer.open({
-                    type: 1,
-                    area: ['800px', '500px'],
+                    type: 2,
+                    area: ['1000px', '550px'],
                     title: ['收费', 'font-size:18px;'],
                     skin: 'layui-layer-molv',
-                    content: getContent(editData,$("#editTemplate").html()),
-                    btn: ['确认'],
-                    yes: function(index, layero) {
-                        var dataOfEdit = {
-                            id : data.id,
-                            busNumber : $("#editTmpl #busNumber").val(),
-                            companyId : $("#editTmpl #companyId").val(),
-                            engineNumber : $("#editTmpl #engineNumber").val(),
-                            vehicleIdentificationNumber : $("#editTmpl #vehicleIdentificationNumber").val(),
-                            operationCertificate : $("#editTmpl #operationCertificate").val(),
-                            carType : $("#editTmpl #carType").val(),
-                            loadCapacity : $("#editTmpl #loadCapacity").val(),
-                            status : $("#editTmpl #status").val(),
-                            other : $("#editTmpl #other").val()
-                        }
-                        $.post({
-                            url:API.update,
-                            data:dataOfEdit,
-                            success:function (result) {
-                                if (result.code == 0){
-                                    table.reload('car');
-                                }
-                                layer.close(index);
-                                layer.msg(result.msg);
-                            }
-                        })
-                    }
+                    content: [getFeeHtml(data),'no'],
                 });
                 form.render('select');
             }
         });
+
+        function getFeeHtml(data) {
+            var contractId = data.id;
+            return './feeIndex?contractId=' + contractId;
+        }
 
     });
 
@@ -330,6 +305,14 @@
 
 </script>
 
+<!--入户时间模板-->
+<script type="text/html" id="contractTimeTemplate">
+    {{formatTimestamp(d.contractTime,'yyyy-MM-dd')}}
+</script>
+<!--更新时间模板-->
+<script type="text/html" id="uTTemplate">
+    {{formatTimestamp(d.uT,'yyyy-MM-dd')}}
+</script>
 <!--表格-编辑模板-->
 <script type="text/html" id="barRender">
     <a class="layui-btn layui-btn-mini" lay-event="edit">收款</a>

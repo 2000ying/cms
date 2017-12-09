@@ -16,7 +16,7 @@
                 <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
                 <li class="layui-nav-item"><a href="/company/index">公司管理</a></li>
                 <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
-                <li class="layui-nav-item"><a href="/remind/index">提醒</a></li>
+                <li class="layui-nav-item"><a href="/remind/index">工单</a></li>
             </ul>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
@@ -71,6 +71,7 @@
 </div>
 </body>
 <script src="/js/layui/layui.all.js"></script>
+<script src="/js/common/common.js"></script>
 <script >
     var API = {
         search: "/customer/getData"
@@ -90,7 +91,7 @@
                 {field:'nowAddress',title:'暂住地址',width:200},
                 {field:'identify',title:'身份证好',width:200},
                 {field:'other',title:'其他',width:80},
-                {field:'uT',title:'操作时间',width:80},
+                {field:'uT',title:'操作时间',width:110},
                 {field:'uPName',title:'操作人',width:80},
                 {field:'uPName',title:'操作',width:80}
             ]],
