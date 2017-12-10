@@ -16,7 +16,7 @@
                 <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
                 <li class="layui-nav-item"><a href="/company/index">公司管理</a></li>
                 <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
-                <li class="layui-nav-item"><a href="/remind/index">工单</a></li>
+                <li class="layui-nav-item"><a href="/workOrder/index">工单</a></li>
             </ul>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
@@ -43,14 +43,24 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="name" autocomplete="off" class="layui-input" id="name"/>
+                            <input type="text" name="clientName" autocomplete="off" class="layui-input" id="clientName"/>
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">电话</label>
+                        <label class="layui-form-label">车牌号</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="tel" autocomplete="off" class="layui-input" id="tel"/>
+                            <input type="text" name="busName" autocomplete="off" class="layui-input" id="busName"/>
                         </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">是否处理</label>
+                    <div class="layui-input-block">
+                        <select name="status" lay-filter="aihao" id="status">
+                            <option value="">全部</option>
+                            <option value="0">未处理</option>
+                            <option value="1">已处理</option>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -65,7 +75,7 @@
             <fieldset class="layui-elem-field layui-field-title">
                 <legend>显示</legend>
             </fieldset>
-            <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
+            <table class="layui-hide" id="workOrder_table"></table>
         </div>
     </div>
 </div>
@@ -74,37 +84,57 @@
 <script src="/js/common/common.js"></script>
 <script >
     var API = {
-        search: "/customer/getData"
+        search: "/workOrder/getData",
+        changeStatus: "/workOrder/changeStatus"
     }
-
-    layui.use('table',function(){
+    var $ =layui.$;
+    layui.use(['table','laytpl','form'],function(){
         var table =layui.table;
+        var form = layui.form;
+        var laytpl = layui.laytpl;
         table.render({
-            elem:'#LAY_table_user',
+            elem:'#workOrder_table',
             url:API.search,
-            cols:[[{checkbox:true,fixed:true},
-                {field:'id',title:'ID',width:80,fixed:true},
-                {field:'userName',title:'姓名',width:80},
-                {field:'tel',title:'电话',width:80},
-                {field:'mobile',title:'手机',width:80},
-                {field:'realAddress',title:'实际地址',width:200},
-                {field:'nowAddress',title:'暂住地址',width:200},
-                {field:'identify',title:'身份证好',width:200},
-                {field:'other',title:'其他',width:80},
-                {field:'uT',title:'操作时间',width:110},
-                {field:'uPName',title:'操作人',width:80},
-                {field:'uPName',title:'操作',width:80}
+            cols:[[
+                {field:'clientName',title:'姓名',width:80},
+                {field:'busNumber',title:'车牌号',width:200},
+                {field:'content',title:'处理内容',width:800},
+                {field:'status',title:'是否处理',width:110 , templet:'#statusTpl'}
             ]],
-            id:'testReload',
+            id:'workOrder',
             page:true,
             height:500
         });
-        var $ =layui.$, active ={reload:function(){
-            var name =$('#name');
-            var tel = $("#tel");
-            table.reload('testReload',{where:{key:{name:name.val(),tel:tel.val()}}});
+        var active ={reload:function(){
+            var clientName =$('#clientName').val();
+            var busNumber = $("#busNumber").val();
+            var status = $("#status").val();
+            table.reload('workOrder',{where:{clientName:clientName,busNumber:busNumber,status:status}});
         }};
-        $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});});
+        $('.layui-form .layui-btn').on('click',function(){var type =$(this).data('type');active[type] ?active[type].call(this) :'';});
+
+        //监听性别操作
+        form.on('switch(statusFilter)', function(obj){
+            var id = $(this).data('id');
+            var status =  obj.elem.checked ? 0 : 1;
+            var param = {
+                id : id,
+                status : status
+            }
+            postData(API.changeStatus,param,dealResult);
+        });
+
+    });
+
+    function dealResult(data) {
+        layer.msg(data.message);
+    }
+</script>
+
+<!---->
+<script type="text/html" id="statusTpl">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="status" value="{{d.status}}" data-id="{{d.id}}" lay-skin="switch" lay-text="否|是" lay-filter="statusFilter" {{ d.status == 0 ? 'checked' : '' }}>
 </script>
 
 </html>
