@@ -49,4 +49,11 @@ public interface ContractManager {
      * @return
      */
     List<Contract> getContractByCarId(Long carId);
+
+    /**
+     * 根据ID获取合同信息
+     * @param contractIds
+     * @return
+     */
+    List<Contract> getContractByIdIn(List<Long> contractIds);
 }

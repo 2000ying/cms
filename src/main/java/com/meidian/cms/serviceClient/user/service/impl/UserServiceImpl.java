@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -29,5 +31,11 @@ public class UserServiceImpl implements UserService {
             return ServiceResultUtil.returnFalse();
         }
         return ServiceResultUtil.returnTrue(user);
+    }
+
+    @Override
+    public ServiceResult<List<User>> getUserByIdIn(List<Long> userIds) {
+        List<User> companyList = userManager.getUserByIdIn(userIds);
+        return ServiceResultUtil.returnTrue(companyList);
     }
 }

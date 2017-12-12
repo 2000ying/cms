@@ -66,4 +66,10 @@ public class CompanyServiceImpl implements CompanyService {
         List<Company> companyList = companyManager.getCompanyByOwnerAndStatus(id,Status.start);
         return ServiceResultUtil.returnTrue(companyList);
     }
+
+    @Override
+    public ServiceResult<List<Company>> getCompanyByIdIn(List<Long> companyIds) {
+        List<Company> companyList = companyManager.getCompanyByIdIn(companyIds);
+        return ServiceResultUtil.returnTrue(companyList);
+    }
 }

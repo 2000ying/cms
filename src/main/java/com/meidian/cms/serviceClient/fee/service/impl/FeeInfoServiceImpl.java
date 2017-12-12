@@ -45,4 +45,10 @@ public class FeeInfoServiceImpl implements FeeInfoService {
         }
         return ServiceResultUtil.returnTrue("创建成功！");
     }
+
+    @Override
+    public ServiceResult<List<FeeInfo>> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer time) {
+        List<FeeInfo> feeInfoList = feeInfoManager.getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(time);
+        return ServiceResultUtil.returnTrue(feeInfoList);
+    }
 }

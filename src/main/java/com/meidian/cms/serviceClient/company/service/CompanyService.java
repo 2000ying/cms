@@ -49,4 +49,11 @@ public interface CompanyService {
      * @return
      */
     ServiceResult<List<Company>> getValidCompanyByUserId( Long id);
+
+    /**
+     * 根据公司ID 获取公司信息
+     * @param companyIds
+     * @return
+     */
+    ServiceResult<List<Company>> getCompanyByIdIn(List<Long> companyIds);
 }

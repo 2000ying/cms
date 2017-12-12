@@ -136,4 +136,9 @@ public class ContractManagerImpl implements ContractManager {
     public List<Contract> getContractByCarId(Long carId) {
         return contractDao.getContractByCarIdAndIsDeleted(carId,0);
     }
+
+    @Override
+    public List<Contract> getContractByIdIn(List<Long> contractIds) {
+        return contractDao.getContractByIdIn(contractIds);
+    }
 }

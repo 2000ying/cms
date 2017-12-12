@@ -24,4 +24,6 @@ public interface CompanyManager {
     public Integer save(Company company);
 
     public List<Company> getCompanyByOwnerAndStatus(Long id, Integer start);
+
+    List<Company> getCompanyByIdIn(List<Long> companyIds);
 }

@@ -54,4 +54,11 @@ public interface ContractService {
      * @return
      */
     ServiceResult<List<Contract>> getContractByCarId(Long carId);
+
+    /**
+     * 根据ID 获取信息，批量
+     * @param contractIds
+     * @return
+     */
+    ServiceResult<List<Contract>> getContractByIdIn(List<Long> contractIds);
 }

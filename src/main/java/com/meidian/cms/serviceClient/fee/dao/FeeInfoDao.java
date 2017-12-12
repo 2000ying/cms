@@ -24,4 +24,12 @@ public interface FeeInfoDao  extends CrudRepository<FeeInfo,Long>, JpaSpecificat
      * @return
      */
     public List<FeeInfo> getFeeInfoByContractIdAndIsDeleted(Long contractId, int i);
+
+    /**
+     * 获取需要处理的费用
+     * @param time
+     * @param time1
+     * @return
+     */
+    List<FeeInfo> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer time, Integer time1);
 }

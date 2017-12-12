@@ -62,4 +62,9 @@ public class CompanyManagerImpl implements CompanyManager {
     public List<Company> getCompanyByOwnerAndStatus(Long id, Integer status) {
         return companyDao.getCompanyByOwnerAndStatus(id,status);
     }
+
+    @Override
+    public List<Company> getCompanyByIdIn(List<Long> companyIds) {
+        return companyDao.getCompanyByIdInAndIsDeleted(companyIds,0);
+    }
 }

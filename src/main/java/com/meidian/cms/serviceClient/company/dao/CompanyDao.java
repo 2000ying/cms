@@ -38,4 +38,6 @@ public interface CompanyDao extends JpaRepository<Company,Long> {
                               @Param("uUName")String uUName);
 
     List<Company> getCompanyByOwnerAndStatus(Long id, Integer status);
+
+    List<Company> getCompanyByIdInAndIsDeleted(List<Long> companyIds, int i);
 }

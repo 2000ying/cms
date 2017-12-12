@@ -92,4 +92,10 @@ public class ContractServiceImpl implements ContractService {
         List<Contract> result = contractManager.getContractByCarId(carId);
         return ServiceResultUtil.returnTrue(result);
     }
+
+    @Override
+    public ServiceResult<List<Contract>> getContractByIdIn(List<Long> contractIds) {
+        List<Contract> result = contractManager.getContractByIdIn(contractIds);
+        return ServiceResultUtil.returnTrue(result);
+    }
 }

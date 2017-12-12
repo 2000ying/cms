@@ -40,4 +40,9 @@ public class FeeInfoManagerImpl implements FeeInfoManager {
         }
         return Boolean.TRUE;
     }
+
+    @Override
+    public List<FeeInfo> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer time) {
+        return feeInfoDao.getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(time,time);
+    }
 }

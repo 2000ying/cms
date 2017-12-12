@@ -23,4 +23,11 @@ public interface FeeInfoService {
     ServiceResult<List<FeeInfo>> getFeeInfoByContractId(Long contractId);
 
     ServiceResult<Boolean> addFeeInfo(FeeInfo feeInfo);
+
+    /**
+     * 获取即将到期的
+     * @param time
+     * @return
+     */
+    ServiceResult<List<FeeInfo>> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer time);
 }
