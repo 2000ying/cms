@@ -40,4 +40,11 @@ public interface ClientManager {
      * @return
      */
     Client getClientById(Long id);
+
+    /**
+     * 根据客户id获取客户信息
+     * @param clientIds
+     * @return
+     */
+    List<Client> getClientByIdIn(List<Long> clientIds);
 }

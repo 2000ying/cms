@@ -5,6 +5,8 @@ import com.meidian.cms.serviceClient.workOrder.WorkOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 /**
  * Title: com.meidian.cms.serviceClient.workOrder.service<br>
  * Description: <br>
@@ -29,4 +31,12 @@ public interface WorkOrderService {
      * @return
      */
     ServiceResult<Boolean> changeStatus(WorkOrder workOrder);
+
+    /**
+     * 添加工单
+     * @param workOrderList
+     * @param begin
+     *@param end @return
+     */
+    ServiceResult<Boolean> insertOrUpdateWorkOrder(List<WorkOrder> workOrderList, Integer begin, Integer end);
 }

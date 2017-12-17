@@ -1,7 +1,9 @@
 package com.meidian.cms.schedule;
 
 import com.meidian.cms.common.Enum.ErrorCode;
+import com.meidian.cms.common.Integers;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.Strings;
 import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.common.utils.TimeUtil;
@@ -14,6 +16,7 @@ import com.meidian.cms.serviceClient.fee.service.FeeInfoService;
 import com.meidian.cms.serviceClient.user.User;
 import com.meidian.cms.serviceClient.user.service.UserService;
 import com.meidian.cms.serviceClient.workOrder.WorkOrder;
+import com.meidian.cms.serviceClient.workOrder.service.WorkOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,7 @@ public class GenerateWorkOrderSchedule {
 
     private static final Logger logger = LoggerFactory.getLogger(GenerateWorkOrderSchedule.class);
 
-    private static final Integer TIME = 7;
+    private static final Integer TIME = 14;
 
     @Autowired
     private FeeInfoService feeInfoService;
@@ -53,12 +56,16 @@ public class GenerateWorkOrderSchedule {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private WorkOrderService workOrderService;
+
     @Scheduled(cron="0 * * * * *")
     public void GenerateWorkOrderJob() throws BusinessException {
-        //1.获取需要处理的合同，未来七天之前的所有到期的费用
-        Integer time = TimeUtil.getPreDayByToday(TIME);
-        
-        ServiceResult<List<FeeInfo>> feeInfoServiceResult =  feeInfoService.getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(time);
+        //1.获取需要处理的合同，未来14天之前的所有到期的费用
+        Integer end = TimeUtil.getPreDayByToday(TIME);
+        Integer begin = TimeUtil.getTodayUnixTimeStamp();
+
+        ServiceResult<List<FeeInfo>> feeInfoServiceResult =  feeInfoService.getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(begin,end);
 
         if (!feeInfoServiceResult.getSuccess()){
             logger.error("获取费用信息报错");
@@ -108,12 +115,15 @@ public class GenerateWorkOrderSchedule {
         }
         List<User> userList = userServiceResult.getBody();
 
-        List<WorkOrder> workOrderList = this.makeWorkOrder(feeInfoList,contractList,companyList,userList,time);
+        List<WorkOrder> workOrderList = this.makeWorkOrder(feeInfoList,contractList,companyList,userList,end);
+
+        ServiceResult<Boolean> workOrderServiceResult = workOrderService.insertOrUpdateWorkOrder(workOrderList,begin,end);
 
     }
 
     //构造工单
-    private List<WorkOrder> makeWorkOrder(List<FeeInfo> feeInfoList, List<Contract> contractList, List<Company> companyList, List<User> userList, Integer time) {
+    private List<WorkOrder> makeWorkOrder(List<FeeInfo> feeInfoList, List<Contract> contractList,
+                                          List<Company> companyList, List<User> userList, Integer end) {
         List<WorkOrder> result = new ArrayList<>();
         Map<Long,Contract> contractMap = contractList.stream().collect(Collectors.toMap(Contract::getId,obj -> obj));
         Map<Long,Company> companyMap = companyList.stream().collect(Collectors.toMap(Company::getId,obj -> obj));
@@ -122,12 +132,57 @@ public class GenerateWorkOrderSchedule {
         Map<Long,WorkOrder> hasDealContractMap = new HashMap<>();
         feeInfoList.forEach(obj -> {
             if (hasDealContractMap.containsKey(obj.getContractId())){
-                
+                WorkOrder workOrder = hasDealContractMap.get(obj.getContractId());
+                setContent(workOrder,obj,end);
             }else{
+                Contract contract = contractMap.get(obj.getContractId());
+                Company company = companyMap.get(contract.getCompanyId());
+                User user = userMap.get(company.getOwner());
 
+                WorkOrder workOrder = new WorkOrder();
+                workOrder.setHandlerId(user.getId());
+                workOrder.setStatus(0);
+                workOrder.setBusNumber(contract.getBusNumber());
+                workOrder.setClientId(contract.getUserId());
+                workOrder.setClientName(contract.getUserName());
+                workOrder.setCarId(contract.getCarId());
+                workOrder.setcT(TimeUtil.getNowTimeStamp());
+                workOrder.setuT(TimeUtil.getNowTimeStamp());
+                setContent(workOrder,obj,end);
+
+                workOrder.setcU(0L);
+                workOrder.setcUName("");
+                workOrder.setuU(0L);
+                workOrder.setuUName("");
+
+                hasDealContractMap.put(obj.getContractId(),workOrder);
+                result.add(workOrder);
             }
         });
 
         return result;
+    }
+
+    private void setContent(WorkOrder workOrder, FeeInfo obj, Integer end) {
+        Integer expireTime = Integer.MAX_VALUE;
+        StringBuilder builder = new StringBuilder(Strings.defaultIfNull(workOrder.getContent(),""));
+        if (end > obj.getGradeInsuranceFeeExpireTime()){
+            builder.append("等级二保费用到期！");
+            expireTime = Integers.min(expireTime,obj.getGradeInsuranceFeeExpireTime());
+        }
+        if (end > obj.getManageFeeExpireTime()){
+            builder.append("管理费到期！");
+            expireTime = Integers.min(expireTime,obj.getManageFeeExpireTime());
+        }
+        if (end > obj.getVehicleFeeExpireTime()){
+            builder.append("交强险费用到期！");
+            expireTime = Integers.min(expireTime,obj.getVehicleFeeExpireTime());
+        }
+        if (end > obj.getThreeInsuranceFeeExpireTime()){
+            builder.append("三险费用到期！");
+            expireTime = Integers.min(expireTime,obj.getThreeInsuranceFeeExpireTime());
+        }
+        workOrder.setContent(builder.toString());
+        workOrder.setExpirationTime(expireTime);
     }
 }

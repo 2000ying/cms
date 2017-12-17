@@ -97,4 +97,15 @@ public class ClientServiceImpl implements ClientService {
         Client client = clientManager.getClientById(id);
         return ServiceResultUtil.returnTrue(client);
     }
+
+    /**
+     * 根据客户id获取客户信息
+     * @param clientIds
+     * @return
+     */
+    @Override
+    public ServiceResult<List<Client>> getClientByIdIn(List<Long> clientIds) {
+        List<Client> clients = clientManager.getClientByIdIn(clientIds);
+        return ServiceResultUtil.returnTrue(clients);
+    }
 }

@@ -2,8 +2,9 @@ package com.meidian.cms.serviceClient.workOrder.manager;
 
 import com.meidian.cms.serviceClient.workOrder.WorkOrder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * Title: com.meidian.cms.serviceClient.workOrder.manager<br>
@@ -30,4 +31,6 @@ public interface WorkOrderManager {
      * @return
      */
     Boolean changeStatus(WorkOrder workOrder);
+
+    Boolean insertOrUpdateWorkOrder(List<WorkOrder> workOrderList, Integer begin, Integer end);
 }

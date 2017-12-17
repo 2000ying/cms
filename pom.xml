@@ -5,7 +5,7 @@
 
 	<groupId>com.meidian</groupId>
 	<artifactId>cms</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>cms</name>
@@ -93,9 +93,15 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.5</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.14</version>
+		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>cms</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

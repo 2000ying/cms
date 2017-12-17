@@ -31,5 +31,5 @@ public interface FeeInfoDao  extends CrudRepository<FeeInfo,Long>, JpaSpecificat
      * @param time1
      * @return
      */
-    List<FeeInfo> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer time, Integer time1);
+    List<FeeInfo> getFeeInfoByManageFeeExpireTimeOrGradeInsuranceFeeExpireTime(Integer time, Integer time1);
 }

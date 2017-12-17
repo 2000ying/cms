@@ -60,4 +60,11 @@ public interface ClientService {
      * @return
      */
     ServiceResult<Client> getClientById(Long id);
+
+    /**
+     * 根据客户id获取客户信息
+     * @param clientIds
+     * @return
+     */
+    ServiceResult<List<Client>> getClientByIdIn(List<Long> clientIds);
 }

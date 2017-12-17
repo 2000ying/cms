@@ -26,8 +26,10 @@ public interface FeeInfoService {
 
     /**
      * 获取即将到期的
-     * @param time
+     *
+     * @param begin
+     * @param end
      * @return
      */
-    ServiceResult<List<FeeInfo>> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer time);
+    ServiceResult<List<FeeInfo>> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer begin, Integer end);
 }

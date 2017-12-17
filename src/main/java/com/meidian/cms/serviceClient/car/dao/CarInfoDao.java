@@ -24,4 +24,6 @@ public interface CarInfoDao  extends CrudRepository<CarInfo,Long>, JpaSpecificat
     List<CarInfo> getCarInfoByCompanyIdAndNoBinding(@Param("companyId") Long companyId);
 
     CarInfo getCarInfoById(Long carInfoId);
+
+    List<CarInfo> getCarInfoByIdIn(List<Long> carIds);
 }

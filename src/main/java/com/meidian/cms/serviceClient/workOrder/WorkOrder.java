@@ -26,6 +26,7 @@ public class WorkOrder implements Serializable {
     private Long handlerId;
     private String content;
     private Integer status;
+    private Integer expirationTime;
 
     /*是否删除*/
     private Integer isDeleted = new Integer(0);
@@ -167,4 +168,17 @@ public class WorkOrder implements Serializable {
     public void setuUName(String uUName) {
         this.uUName = uUName;
     }
+
+    public Integer getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(Integer expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
+    public String getCarBusNumberAndExpirationTime(){
+        return this.getBusNumber() + "-" + this.getExpirationTime();
+    }
+
 }

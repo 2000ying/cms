@@ -39,14 +39,14 @@
             elem:'#fee_table',
             url:API_FEE.search,
             cols:[[
-                {field:'time',title:'缴费时间',width:110,templet:'#timeTemplate'},
-                {field:'expireTime',title:'到期时间',width:110,templet:'#expireTimeTemplate'},
                 {field:'manageFee',title:'管理费',width:80},
+                {title:'管理费有效日期',width:200,templet:'#manageFeeTimeTemplate'},
                 {field:'vehicleFee',title:'交强险',width:80},
+                {title:'交强险费用有效日期',width:200,templet:'#vehicleFeeTimeTemplate'},
                 {field:'threeInsuranceFee',title:'三险',width:80},
-                {field:'gradeInsuranceFee',title:'等级二保',width:200},
-                {field:'gradeInsuranceFeeTime',title:'等级二保缴费日期',width:160,templet:'#gradeInsuranceFeeTimeTemplate'},
-                {field:'gradeInsuranceFeeExpireTime',title:'等级二保到期日期',width:160,templet:'#gradeInsuranceFeeExpireTimeTemplate'},
+                {title:'三险费用有效日期',width:200,templet:'#threeInsuranceFeeTemplate'},
+                {field:'gradeInsuranceFee',title:'等级二保',width:100},
+                {title:'等级二保费用有效日期',width:200,templet:'#gradeInsuranceFeeTimeTemplate'},
                 {field:'other',title:'其他',width:80},
                 {field:'remark',title:'备注',width:80},
                 {field:'uT',title:'操作时间',width:150,templet:'#uTTemplate'},
@@ -69,11 +69,15 @@
                 yes: function(index, layero) {
                     var dataOfAdd = {
                         contractId                      : contractId,
-                        timeStr                         : $("#addAndEditTmpl #time").val(),
-                        expireTimeStr                   : $("#addAndEditTmpl #expireTime").val(),
                         manageFee                       : $("#addAndEditTmpl #manageree").val(),
+                        manageFeeTimeStr                : $("#addAndEditTmpl #manageFeeTime").val(),
+                        manageFeeExpireTimeStr          : $("#addAndEditTmpl #manageFeeExpireTime").val(),
                         vehicleFee                      : $("#addAndEditTmpl #vehicleFee").val(),
+                        vehicleFeeTimeStr               : $("#addAndEditTmpl #vehicleFeeTime").val(),
+                        vehicleFeeExpireTimeStr         : $("#addAndEditTmpl #vehicleFeeExpireTime").val(),
                         threeInsuranceFee               : $("#addAndEditTmpl #threeInsuranceFee").val(),
+                        threeInsuranceFeeTimeStr        : $("#addAndEditTmpl #threeInsuranceFeeTime").val(),
+                        threeInsuranceFeeExpireTimeStr  : $("#addAndEditTmpl #threeInsuranceFeeExpireTime").val(),
                         gradeInsuranceFee               : $("#addAndEditTmpl #gradeInsuranceFee").val(),
                         gradeInsuranceFeeTimeStr        : $("#addAndEditTmpl #gradeInsuranceFeeTime").val(),
                         gradeInsuranceFeeExpireTimeStr  : $("#addAndEditTmpl #gradeInsuranceFeeExpireTime").val(),
@@ -100,10 +104,22 @@
             form.render('select');
             /*时间拾取器*/
             laydate.render({
-                elem: '#time'
+                elem: '#manageFeeTime'
             });
             laydate.render({
-                elem: '#expireTime'
+                elem: '#manageFeeExpireTime'
+            });
+            laydate.render({
+                elem: '#vehicleFeeTime'
+            });
+            laydate.render({
+                elem: '#vehicleFeeExpireTime'
+            });
+            laydate.render({
+                elem: '#threeInsuranceFeeTime'
+            });
+            laydate.render({
+                elem: '#threeInsuranceFeeExpireTime'
             });
             laydate.render({
                 elem: '#gradeInsuranceFeeTime'
@@ -115,44 +131,40 @@
     });
 
     function checkParam(data) {
-        if(null == data.timeStr || '' == data.timeStr){
-            layer.msg('请选择交款时间');
+        if(isNotEmpty(data.manageFee)&&(isEmpty(data.manageFeeExpireTimeStr) || isEmpty(data.manageFeeTimeStr))){
+            layer.msg('请选择管理费时间');
             return false;
         }
-        if(null == data.expireTimeStr || '' == data.expireTimeStr){
-            layer.msg('请选择交款到期时间');
+        if(isNotEmpty(data.vehicleFee)&&(isEmpty(data.vehicleFeeTimeStr) || isEmpty(data.vehicleFeeExpireTimeStr))){
+            layer.msg('请选择交强险费用时间');
             return false;
         }
-        if(null != data.expireTimeStr && '' != data.expireTimeStr &&
-                (null == data.gradeInsuranceFeeTimeStr || '' == data.gradeInsuranceFeeTimeStr)){
-            layer.msg('请选择二保交款时间');
+        if(isNotEmpty(data.threeInsuranceFee)&&(isEmpty(data.threeInsuranceFeeTimeStr) || isEmpty(data.threeInsuranceFeeExpireTimeStr))){
+            layer.msg('请选择三险费用时间');
             return false;
         }
-        if(null != data.expireTimeStr && '' != data.expireTimeStr &&
-                (null == data.gradeInsuranceFeeExpireTimeStr || '' == data.gradeInsuranceFeeExpireTimeStr)){
-            layer.msg('请选择二保交款到期时间');
+        if(isNotEmpty(data.gradeInsuranceFee)&&(isEmpty(data.gradeInsuranceFeeTimeStr) || isEmpty(data.gradeInsuranceFeeExpireTimeStr))){
+            layer.msg('请选择等级二保费用时间');
             return false;
         }
         return true;
     }
 
 </script>
-<!--更新时间模板-->
-<script type="text/html" id="timeTemplate">
-    {{formatTimestamp(d.time,'yyyy-MM-dd')}}
+<!--模板-->
+<script type="text/html" id="manageFeeTimeTemplate">
+    {{formatTimestamp(d.manageFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.manageFeeExpireTime,'yyyy-MM-dd')}}
 </script>
-<!--更新时间模板-->
-<script type="text/html" id="expireTimeTemplate">
-    {{formatTimestamp(d.expireTime,'yyyy-MM-dd')}}
+<script type="text/html" id="vehicleFeeTimeTemplate">
+    {{formatTimestamp(d.vehicleFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.vehicleFeeExpireTime,'yyyy-MM-dd')}}
 </script>
-<!--更新时间模板-->
+<script type="text/html" id="threeInsuranceFeeTemplate">
+    {{formatTimestamp(d.threeInsuranceFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.threeInsuranceFeeExpireTime,'yyyy-MM-dd')}}
+</script>
 <script type="text/html" id="gradeInsuranceFeeTimeTemplate">
-    {{formatTimestamp(d.gradeInsuranceFeeTime,'yyyy-MM-dd')}}
+    {{formatTimestamp(d.gradeInsuranceFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.gradeInsuranceFeeExpireTime,'yyyy-MM-dd')}}
 </script>
-<!--更新时间模板-->
-<script type="text/html" id="gradeInsuranceFeeExpireTimeTemplate">
-    {{formatTimestamp(d.gradeInsuranceFeeExpireTime,'yyyy-MM-dd')}}
-</script>
+
 <!--更新时间模板-->
 <script type="text/html" id="uTTemplate">
    {{formatTimestamp(d.uT,'yyyy-MM-dd')}}
@@ -164,22 +176,7 @@
         <div style="margin: 10px" id="addAndEditTmpl">
             <div class="layui-form-item layui-form layui-form-pane">
                 <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">
-                    <legend style=";font-size: 16px">时间</legend>
-                </fieldset>
-                <div class="layui-inline">
-                    <label class="layui-form-label">缴费时间*</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="time" name="time" placeholder="缴费时间" autocomplete="off" class="layui-input"/>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">到期时间*</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="expireTime" name="expireTime" placeholder="到期时间" autocomplete="off" class="layui-input"/>
-                    </div>
-                </div>
-                <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">
-                    <legend style=";font-size: 16px">费用</legend>
+                    <legend style=";font-size: 16px">管理费用</legend>
                 </fieldset>
                 <div class="layui-inline">
                     <label class="layui-form-label">管理费</label>
@@ -188,15 +185,57 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">交强险</label>
+                    <label class="layui-form-label">管理费缴费日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="manageFeeTime" name="manageFeeTime" placeholder="管理费缴费日期" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">管理费到期日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="manageFeeExpireTime" name="manageFeeExpireTime" placeholder="管理费到期日期" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+                <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">
+                    <legend style=";font-size: 16px">交强险费用</legend>
+                </fieldset>
+                <div class="layui-inline">
+                    <label class="layui-form-label">交强险费用</label>
                     <div class="layui-input-inline">
                         <input type="text" id="vehicleFee" name="vehicleFee" placeholder="交强险" autocomplete="off" class="layui-input"/>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">三险</label>
+                    <label class="layui-form-label">管理费缴费日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="vehicleFeeTime" name="vehicleFeeTime" placeholder="管理费缴费日期" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">管理费到期日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="vehicleFeeExpireTime" name="vehicleFeeExpireTime" placeholder="管理费到期日期" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+                <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">
+                    <legend style=";font-size: 16px">三险费用</legend>
+                </fieldset>
+                <div class="layui-inline">
+                    <label class="layui-form-label">三险费用</label>
                     <div class="layui-input-inline">
                         <input type="text" id="threeInsuranceFee" name="threeInsuranceFee" placeholder="三险" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">三险费用缴费日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="threeInsuranceFeeTime" name="threeInsuranceFeeTime" placeholder="三险费用缴费日期" autocomplete="off" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">三险费用到期日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="threeInsuranceFeeExpireTime" name="threeInsuranceFeeExpireTime" placeholder="三险费用到期日期" autocomplete="off" class="layui-input"/>
                     </div>
                 </div>
                 <fieldset class="layui-elem-field layui-field-title"  style="margin-top: 0px">

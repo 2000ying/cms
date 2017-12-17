@@ -155,4 +155,14 @@ public class ClientManagerImpl implements ClientManager {
     public Client getClientById(Long id) {
         return clientDao.getClientById(id);
     }
+
+    /**
+     * 根据客户id获取客户信息
+     * @param clientIds
+     * @return
+     */
+    @Override
+    public List<Client> getClientByIdIn(List<Long> clientIds) {
+        return clientDao.getClientByIdIn(clientIds);
+    }
 }

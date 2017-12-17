@@ -28,4 +28,6 @@ public interface ClientDao extends CrudRepository<Client,Long>, JpaSpecification
     List<Client> getClientByCompanyIdAndIsDeleted(Long companyId, int i);
 
     Client getClientById(Long id);
+
+    List<Client> getClientByIdIn(List<Long> clientIds);
 }

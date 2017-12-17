@@ -5,6 +5,8 @@ import com.meidian.cms.serviceClient.workOrder.WorkOrder;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 /**
  * Title: com.meidian.cms.serviceClient.workOrder.dao<br>
  * Description: <br>
@@ -15,4 +17,5 @@ import org.springframework.data.repository.CrudRepository;
  *         2017/12/10
  */
 public interface WorkOrderDao extends CrudRepository<WorkOrder,Long>, JpaSpecificationExecutor<WorkOrder> {
+
 }

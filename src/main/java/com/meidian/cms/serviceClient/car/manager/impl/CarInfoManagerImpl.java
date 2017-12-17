@@ -181,4 +181,14 @@ public class CarInfoManagerImpl implements CarInfoManager {
     public CarInfo getCarInfoById(Long carInfoId) {
         return carInfoDao.getCarInfoById(carInfoId);
     }
+
+    /**
+     * 根据id获取车辆信息
+     * @param carIds
+     * @return
+     */
+    @Override
+    public List<CarInfo> getCarInfoByIdIn(List<Long> carIds) {
+        return carInfoDao.getCarInfoByIdIn(carIds);
+    }
 }

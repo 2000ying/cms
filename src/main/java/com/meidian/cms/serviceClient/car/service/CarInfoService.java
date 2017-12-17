@@ -61,4 +61,11 @@ public interface CarInfoService {
      * @return
      */
     ServiceResult<CarInfo> getCarInfoById(Long carInfoId);
+
+    /**
+     * 根据id获取批量信息
+     * @param carIds
+     * @return
+     */
+    ServiceResult<List<CarInfo>> getCarInfoByIdIn(List<Long> carIds);
 }

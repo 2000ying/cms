@@ -60,4 +60,11 @@ public interface CarInfoManager {
      * @return
      */
     CarInfo getCarInfoById(Long carInfoId);
+
+    /**
+     * 根据id获取车辆信息
+     * @param carIds
+     * @return
+     */
+    List<CarInfo> getCarInfoByIdIn(List<Long> carIds);
 }

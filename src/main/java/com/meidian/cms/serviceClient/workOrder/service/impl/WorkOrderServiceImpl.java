@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Title: com.meidian.cms.serviceClient.workOrder.service.impl<br>
  * Description: <br>
@@ -50,5 +52,17 @@ public class WorkOrderServiceImpl implements WorkOrderService {
             return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"更新状态失败！");
         }
         return ServiceResultUtil.returnTrue("更新状态成功！");
+    }
+
+    /**
+     * 添加工单
+     * @param workOrderList
+     * @param begin
+     *@param end @return
+     */
+    @Override
+    public ServiceResult<Boolean> insertOrUpdateWorkOrder(List<WorkOrder> workOrderList, Integer begin, Integer end) {
+        workOrderManager.insertOrUpdateWorkOrder(workOrderList,begin,end);
+        return ServiceResultUtil.returnTrue();
     }
 }

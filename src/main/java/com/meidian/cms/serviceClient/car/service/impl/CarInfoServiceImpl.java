@@ -106,4 +106,15 @@ public class CarInfoServiceImpl implements CarInfoService {
         CarInfo  carInfo = carInfoManager.getCarInfoById(carInfoId);
         return ServiceResultUtil.returnTrue(carInfo);
     }
+
+    /**
+     * 根据id获取批量信息
+     * @param carIds
+     * @return
+     */
+    @Override
+    public ServiceResult<List<CarInfo>> getCarInfoByIdIn(List<Long> carIds) {
+        List<CarInfo> carInfoList = carInfoManager.getCarInfoByIdIn(carIds);
+        return ServiceResultUtil.returnTrue(carInfoList);
+    }
 }

@@ -50,3 +50,27 @@ function formatTimestamp(data,format) {
     
     return newDate.format(format);
 }
+
+
+function getFormData(formId) {
+    var arr = $('#' + formId).serializeArray();
+    var result = {};
+    for ( var i = 0; i < arr.length; i++) {
+        result[arr[i].name] = arr[i].value;
+    }
+    return result;
+}
+
+function isEmpty(data) {
+    if (null == data || '' == data){
+        return true;
+    }
+    return false;
+}
+
+function isNotEmpty(data) {
+    if (null == data || '' == data){
+        return false;
+    }
+    return true;
+}

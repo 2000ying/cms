@@ -15,7 +15,7 @@
                 <li class="layui-nav-item"><a href="/customer/index">人员管理</a></li>
                 <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
                 <li class="layui-nav-item"><a href="/company/index">公司管理</a></li>
-                <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
+                <li class="layui-nav-item"><a href="/agreement/index">合同费用管理</a></li>
                 <li class="layui-nav-item"><a href="/workOrder/index">工单</a></li>
             </ul>
             <ul class="layui-nav layui-layout-right">
@@ -38,7 +38,7 @@
             <fieldset class="layui-elem-field layui-field-title">
                 <legend>查询</legend>
             </fieldset>
-            <div class="layui-form layui-form-pane">
+            <div class="layui-form layui-form-pane" id="search_form">
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名</label>
@@ -94,10 +94,12 @@
                 <legend>显示</legend>
             </fieldset>
             <button class="layui-btn add">添加合同</button>
+            <button class="layui-btn layui-btn-danger export">导出</button>
             <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
         </div>
     </div>
 </div>
+    <div id="export_form_div"></div>
 </body>
 <script src="/js/layui/layui.all.js"></script>
 <script src="/js/common/common.js"></script>
@@ -109,7 +111,8 @@
         search: "/agreement/getData",
         getCustomersAndCarsByCompanyId: "/agreement/getCustomersAndCarsByCompanyId",
         add: "/agreement/add",
-        delete: "/agreement/delete"
+        delete: "/agreement/delete",
+        export: "/agreement/export"
     }
     var laydate = layui.laydate;
     layui.use(['table','laytpl','form'],function(){
@@ -292,6 +295,18 @@
             var contractId = data.id;
             return './feeIndex?contractId=' + contractId;
         }
+
+        $(".export").click(function () {
+            var params = getFormData("search_form");
+            var form = '<form style="display:none" id="exportFrom" action="'+ API.export +'">';
+            for(var n in params){
+                var v = params[n];
+                form += '<input type="hidden" name="' + n + '" value="' + v + '"/>';
+            }
+            form += '</form>';
+            $('#export_form_div').html(form);
+            $("#exportFrom").submit();
+        });
 
     });
 

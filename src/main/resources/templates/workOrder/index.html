@@ -23,7 +23,7 @@
                 <li class="layui-nav-item"><a href="/customer/index">人员管理</a></li>
                 <li class="layui-nav-item"><a href="/car/index">车辆管理</a></li>
                 <li class="layui-nav-item"><a href="/company/index">公司管理</a></li>
-                <li class="layui-nav-item"><a href="/agreement/index">契约管理</a></li>
+                <li class="layui-nav-item"><a href="/agreement/index">合同费用管理</a></li>
                 <li class="layui-nav-item"><a href="/workOrder/index">工单</a></li>
             </ul>
             <ul class="layui-nav layui-layout-right">
@@ -106,7 +106,8 @@
             cols:[[
                 {field:'clientName',title:'姓名',width:80},
                 {field:'busNumber',title:'车牌号',width:200},
-                {field:'content',title:'处理内容',width:800},
+                {field:'content',title:'处理内容',width:700},
+                {field:'expirationTime',title:'到期时间',width:700,templet:'#expirationTimeTemplate'},
                 {field:'status',title:'是否处理',width:110 , templet:'#statusTpl'}
             ]],
             id:'workOrder',
@@ -137,6 +138,10 @@
     function dealResult(data) {
         layer.msg(data.message);
     }
+</script>
+
+<script type="text/html" id="expirationTimeTemplate">
+    {{formatTimestamp(d.expirationTime,'yyyy-MM-dd')}}
 </script>
 
 <!---->

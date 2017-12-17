@@ -23,19 +23,27 @@ public class FeeInfo implements Serializable{
 
     private Integer manageFee;//管理费
 
+    private Integer manageFeeTime;//管理费缴费时间
+
+    private Integer manageFeeExpireTime;//管理费到期日期
+
     private Integer vehicleFee;//交强险
 
+    private Integer vehicleFeeTime;//交强险交款日期
+
+    private Integer vehicleFeeExpireTime;//交强险到期日期
+
     private Integer threeInsuranceFee;//三险
+
+    private Integer threeInsuranceFeeTime;//三险缴费日期
+
+    private Integer threeInsuranceFeeExpireTime;//三险到期时间
 
     private Integer gradeInsuranceFee;//等级二保
 
     private Integer gradeInsuranceFeeTime;//等级二保缴费日期
 
     private Integer gradeInsuranceFeeExpireTime;//到期日期
-
-    private Integer time;//缴费时间
-
-    private Integer expireTime;//到期时间
 
     private Integer other;//其他
 
@@ -198,19 +206,51 @@ public class FeeInfo implements Serializable{
         this.gradeInsuranceFeeExpireTime = gradeInsuranceFeeExpireTime;
     }
 
-    public Integer getTime() {
-        return time;
+    public Integer getManageFeeTime() {
+        return manageFeeTime;
     }
 
-    public void setTime(Integer time) {
-        this.time = time;
+    public void setManageFeeTime(Integer manageFeeTime) {
+        this.manageFeeTime = manageFeeTime;
     }
 
-    public Integer getExpireTime() {
-        return expireTime;
+    public Integer getManageFeeExpireTime() {
+        return manageFeeExpireTime;
     }
 
-    public void setExpireTime(Integer expireTime) {
-        this.expireTime = expireTime;
+    public void setManageFeeExpireTime(Integer manageFeeExpireTime) {
+        this.manageFeeExpireTime = manageFeeExpireTime;
+    }
+
+    public Integer getVehicleFeeTime() {
+        return vehicleFeeTime;
+    }
+
+    public void setVehicleFeeTime(Integer vehicleFeeTime) {
+        this.vehicleFeeTime = vehicleFeeTime;
+    }
+
+    public Integer getThreeInsuranceFeeTime() {
+        return threeInsuranceFeeTime;
+    }
+
+    public void setThreeInsuranceFeeTime(Integer threeInsuranceFeeTime) {
+        this.threeInsuranceFeeTime = threeInsuranceFeeTime;
+    }
+
+    public Integer getThreeInsuranceFeeExpireTime() {
+        return threeInsuranceFeeExpireTime;
+    }
+
+    public void setThreeInsuranceFeeExpireTime(Integer threeInsuranceFeeExpireTime) {
+        this.threeInsuranceFeeExpireTime = threeInsuranceFeeExpireTime;
+    }
+
+    public Integer getVehicleFeeExpireTime() {
+        return vehicleFeeExpireTime;
+    }
+
+    public void setVehicleFeeExpireTime(Integer vehicleFeeExpireTime) {
+        this.vehicleFeeExpireTime = vehicleFeeExpireTime;
     }
 }

@@ -24,6 +24,6 @@ public interface FeeInfoManager {
     //添加费用
     Boolean addFeeInfo(FeeInfo feeInfo);
 
-    //获取需要处理费费用
-    List<FeeInfo> getFeeInfoByExpireTimeOrGradeInsuranceFeeExpireTime(Integer time);
+
+    List<FeeInfo> getFeeInfoByExpireTime(Integer begin, Integer end);
 }

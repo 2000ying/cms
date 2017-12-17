@@ -5,10 +5,8 @@ import com.meidian.cms.serviceClient.car.CarInfo;
 import com.meidian.cms.serviceClient.workOrder.WorkOrder;
 import com.meidian.cms.serviceClient.workOrder.dao.WorkOrderDao;
 import com.meidian.cms.serviceClient.workOrder.manager.WorkOrderManager;
-import groovy.util.logging.Commons;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Title: com.meidian.cms.serviceClient.workOrder.manager.impl<br>
@@ -93,5 +94,46 @@ public class WorkOrderManagerImpl implements WorkOrderManager {
         }
         workOrderDao.save(workOrderSaved);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean insertOrUpdateWorkOrder(List<WorkOrder> workOrderList, Integer begin, Integer end) {
+        //1.查询已生成的工单
+        Specification<WorkOrder> specification = getWhereClause(begin,end);
+        List<WorkOrder> workOrders = workOrderDao.findAll(specification);
+
+        //2过滤
+        List<WorkOrder> toAdd = new ArrayList<>();
+        Set<String> key = new HashSet<>();
+        if (!CollectionUtil.isEmpty(workOrders)){
+            key = workOrders.stream().map(WorkOrder::getCarBusNumberAndExpirationTime).collect(Collectors.toSet());
+        }
+        final Set<String> finalKey = key;
+        workOrderList.forEach(obj ->{
+            if (!finalKey.contains(obj.getCarBusNumberAndExpirationTime())){
+                toAdd.add(obj);
+            }
+        });
+
+        if (!CollectionUtil.isEmpty(toAdd)){
+            workOrderDao.save(workOrderList);
+        }
+        return Boolean.TRUE;
+    }
+
+    private Specification<WorkOrder> getWhereClause(Integer begin, Integer end) {
+        return new Specification<WorkOrder>() {
+            @Override
+            public Predicate toPredicate(Root<WorkOrder> root, CriteriaQuery<?> criteriaQuery,
+                                         CriteriaBuilder cb) {
+                List<Predicate> predicate = new ArrayList<>();
+
+                predicate.add(cb.between(root.get("expirationTime"),begin,end));
+                predicate.add(cb.equal(root.get("isDeleted"),0));
+
+                Predicate[] pre = new Predicate[predicate.size()];
+                return criteriaQuery.where(predicate.toArray(pre)).getRestriction();
+            }
+        };
     }
 }
