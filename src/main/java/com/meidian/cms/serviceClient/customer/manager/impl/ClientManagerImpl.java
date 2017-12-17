@@ -49,7 +49,7 @@ public class ClientManagerImpl implements ClientManager {
                     predicate.add(cb.like(root.get("name"),client.getName()));
                 }
                 if (!StringUtils.isEmpty(client.getTel())){
-                    predicate.add(cb.like(root.get("tel"),client.getTel()));
+                    predicate.add(cb.like(root.get("mobile"),client.getTel()));
                 }
                 if (!CollectionUtil.isEmpty(companyIds)){
                     predicate.add(root.get("companyId").in(companyIds));

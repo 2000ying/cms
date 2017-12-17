@@ -97,6 +97,7 @@
             where:{companyName:$('#name').val(),status:$("#status").val()},
             url:API.search,
             cols:[[
+                {type:'numbers'},
                 {field:'id',title:'编号', align:'center',width:80},
                 {field:'companyName',title:'公司名', align:'center',width:150},
                 {field:'ownerName',title:'公司拥有者', align:'center',width:200},
@@ -150,6 +151,10 @@
                             crew : $("#addAndEditTmpl #crewEdit").val(),
                             status : $("#addAndEditTmpl .status").val()
                         }
+                        var isOk = checkParam(dataOfEdit);
+                        if (!isOk){
+                            return;
+                        }
                         $.post({
                             url:API.update,
                             data:dataOfEdit,
@@ -180,6 +185,15 @@
                 content: getContent(defaultAddData),
                 btn: ['确认'],
                 yes: function(index, layero) {
+                    var dataOfAdd = {
+                        companyName : $("#addAndEditTmpl #nameEdit").val(),
+                        crew : $("#addAndEditTmpl #crewEdit").val(),
+                        status : $("#addAndEditTmpl .status").val()
+                    }
+                    var isOk = checkParam(dataOfAdd);
+                    if (!isOk){
+                        return;
+                    }
                     $.post({
                         url:API.add,
                         data:dataOfAdd,
@@ -203,6 +217,18 @@
                 result = html;
             });
             return result;
+        }
+
+        function checkParam(data) {
+            if(null == data.companyName || '' == data.companyName){
+                layer.msg('公司名不能为空！');
+                return false;
+            }
+            if(null == data.status || '' == data.status){
+                layer.msg('状态不能为空！');
+                return false;
+            }
+            return true;
         }
     });
 

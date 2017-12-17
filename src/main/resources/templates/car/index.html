@@ -43,7 +43,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">车牌号</label>
                         <div class="layui-input-inline">
-                            <input id="busNumber" type="text" name="busNumber" autocomplete="off" class="layui-input" id="name"/>
+                            <input id="busNumber" type="text" name="busNumber" autocomplete="off" class="layui-input"/>
                         </div>
                     </div>
                 </div>
@@ -108,6 +108,7 @@
             elem:'#LAY_table_user',
             url:API.search,
             cols:[[
+                {type:'numbers'},
                 {field:'busNumber',title:'车牌号',width:200},
                 {field:'companyName',title:'所属公司',width:200},
                 {field:'engineNumber',title:'发动机号',width:200},
@@ -115,7 +116,7 @@
                 {field:'operationCertificate',title:'营运证',width:200},
                 {field:'carType',title:'车型',width:80},
                 {field:'loadCapacity',title:'载重量',width:80},
-                {field:'status',title:'状态',width:80},
+                {field:'status',title:'状态',width:80, templet: '.statusTpl'},
                 {field:'other',title:'其他',width:80},
                 {field:'uT',title:'操作时间',width:110,templet:'#uTTemplate'},
                 {field:'uUName',title:'操作人',width:80},
@@ -417,14 +418,14 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">载重量*</label>
                     <div class="layui-input-block">
-                        <input id="loadCapacity" value="{{ d.data.loadCapacity }}" type="text" name="loadCapacity" autocomplete="off" placeholder="请输入暂住地址" class="layui-input"/>
+                        <input id="loadCapacity" value="{{ d.data.loadCapacity }}" type="text" name="loadCapacity" autocomplete="off" placeholder="请输入载重量" class="layui-input"/>
                     </div>
                 </div>
 
                 <div class="layui-inline">
                     <label class="layui-form-label">发动机号*</label>
                     <div class="layui-input-inline">
-                        <input id="engineNumber" value="{{ d.data.engineNumber }}" type="text" required  lay-verify="notBlank" name="engineNumber" autocomplete="off" placeholder="请输入身份证" class="layui-input"/>
+                        <input id="engineNumber" value="{{ d.data.engineNumber }}" type="text" required  lay-verify="notBlank" name="engineNumber" autocomplete="off" placeholder="请输入发动机号" class="layui-input"/>
                     </div>
                 </div>
 

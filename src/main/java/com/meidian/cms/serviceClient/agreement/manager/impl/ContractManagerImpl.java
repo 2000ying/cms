@@ -64,9 +64,6 @@ public class ContractManagerImpl implements ContractManager {
                 if (!StringUtils.isEmpty(contract.getMobile())){
                     predicate.add(cb.like(root.get("mobile"),contract.getMobile()));
                 }
-                if (!StringUtils.isEmpty(contract.getBusNumber())){
-                    predicate.add(cb.like(root.get("busName"),contract.getBusNumber()));
-                }
                 if (!StringUtils.isEmpty(contract.getUserName())){
                     predicate.add(cb.equal(root.get("userName"),contract.getUserName()));
                 }

@@ -123,6 +123,7 @@
             elem:'#LAY_table_user',
             url:API.search,
             cols:[[
+                {type:'numbers'},
                 {field:'userName',title:'姓名',width:80},
                 {field:'mobile',title:'手机',width:200},
                 {field:'busNumber',title:'车牌号',width:100},
@@ -172,12 +173,14 @@
             //绘制option
             if (null != cars && cars.length > 0){
                 for (var i = 0 ;i < cars.length; i++){
+                    $('#carId').empty();
                     var $option =  $('<option value='+cars[i].id+'>'+ cars[i].busNumber+'</option>');
                     $('#carId').append($option);
                 }
             }
             if (null != clients && clients.length > 0){
                 for (var i= 0;i < clients.length;i++){
+                    $('#userId').empty();
                     var $option =  $('<option value='+clients[i].id+'>'+ clients[i].name + '-' + clients[i].mobile +'</option>');
                     $('#userId').append($option);
                 }
@@ -190,7 +193,7 @@
             layer.open({
                 type: 1,
                 area: ['800px', '500px'],
-                title: ['新增车辆', 'font-size:18px;'],
+                title: ['新增合同', 'font-size:18px;'],
                 skin: 'layui-layer-molv',
                 content: getContent(companyList,$("#addTemplate").html()),
                 btn: ['确认'],
