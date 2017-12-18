@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 80
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -21,6 +21,8 @@ spring:
   thymeleaf:
     cache: false
     mode: LEGACYHTML5
+logging:
+  file: /data/service/cms/logs
 
 
 
