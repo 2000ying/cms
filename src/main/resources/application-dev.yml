@@ -22,7 +22,7 @@ spring:
     cache: false
     mode: LEGACYHTML5
 logging:
-  file: /data/service/cms/logs
+  file:   ./logs/cms.log
 
 
 
