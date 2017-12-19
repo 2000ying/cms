@@ -3,6 +3,7 @@ package com.meidian.cms.controller.car;
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.Result;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.Strings;
 import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.common.utils.ResultUtils;
@@ -74,6 +75,10 @@ public class CarController  extends BasicController {
             }
         }else{
             companyIds.add(carInfo.getCompanyId());
+        }
+
+        if (Strings.isNotEmpty(carInfo.getBusNumber())){
+            carInfo.setBusNumber(carInfo.getBusNumber().trim());
         }
     }
 

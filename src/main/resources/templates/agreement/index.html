@@ -123,16 +123,15 @@
             elem:'#LAY_table_user',
             url:API.search,
             cols:[[
-                {type:'numbers'},
-                {field:'userName',title:'姓名',width:80},
-                {field:'mobile',title:'手机',width:200},
-                {field:'busNumber',title:'车牌号',width:100},
-                {field:'cashPledge',title:'押金',width:80},
-                {field:'companyName',title:'公司',width:150},
-                {field:'contractTime',title:'签约入户时间',width:150 ,templet:'#contractTimeTemplate'},
-                {field:'uT',title:'操作时间',width:150 ,templet:'#uTTemplate'},
-                {field:'uUName',title:'操作人',width:80},
-                {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
+                {field:'userName',title:'姓名',width:'10%'},
+                {field:'mobile',title:'手机',width:'10%'},
+                {field:'busNumber',title:'车牌号',width:'15%'},
+                {field:'cashPledge',title:'押金',width:'10%'},
+                {field:'companyName',title:'公司',width:'10%'},
+                {field:'contractTime',title:'签约入户时间',width:'15%' ,templet:'#contractTimeTemplate'},
+                {field:'uT',title:'操作时间',width:'10%' ,templet:'#uTTemplate'},
+                {field:'uUName',title:'操作人',width:'10%'},
+                {title:'操作',width:'10%' , align:'center', toolbar: '#barRender'}
             ]],
             id:'contract',
             page:true,
@@ -333,8 +332,8 @@
 </script>
 <!--表格-编辑模板-->
 <script type="text/html" id="barRender">
-    <a class="layui-btn layui-btn-mini" lay-event="edit">收款</a>
-    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">收款</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 </script>
 <!--添加模板-->
 <script type="text/html" id="addTemplate">

@@ -108,6 +108,16 @@ public class AgreementController  extends BasicController {
         }else{
             companyIds.add(contract.getCompanyId());
         }
+
+        if (Strings.isNotEmpty(contract.getBusNumber())){
+            contract.setBusNumber(contract.getBusNumber().trim());
+        }
+        if (Strings.isNotEmpty(contract.getUserName())){
+            contract.setUserName(contract.getUserName().trim());
+        }
+        if (Strings.isNotEmpty(contract.getMobile())){
+            contract.setMobile(contract.getMobile().trim());
+        }
     }
 
     @ResponseBody

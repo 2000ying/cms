@@ -54,7 +54,7 @@ public class CarInfoManagerImpl implements CarInfoManager {
                                          CriteriaBuilder cb) {
                 List<Predicate> predicate = new ArrayList<>();
                 if (!StringUtils.isEmpty(carInfo.getBusNumber())){
-                    predicate.add(cb.like(root.get("busName"),carInfo.getBusNumber()));
+                    predicate.add(cb.like(root.get("busNumber"),carInfo.getBusNumber()));
                 }
                 if (!CollectionUtil.isEmpty(companyIds)){
                     predicate.add(root.get("companyId").in(companyIds));

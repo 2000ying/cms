@@ -97,15 +97,14 @@
             where:{companyName:$('#name').val(),status:$("#status").val()},
             url:API.search,
             cols:[[
-                {type:'numbers'},
-                {field:'id',title:'编号', align:'center',width:80},
-                {field:'companyName',title:'公司名', align:'center',width:150},
-                {field:'ownerName',title:'公司拥有者', align:'center',width:200},
-                {field:'crew',title:'组员（以逗号分隔）', align:'center',width:200},
-                {field:'status',title:'状态',width:80, align:'center', templet: '.statusTpl'},
-                {field:'uTString',title:'操作时间',width:200, align:'center'},
-                {field:'uUName',title:'操作人',width:80, align:'center'},
-                {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
+                {field:'id',title:'编号',width:'10%'},
+                {field:'companyName',title:'公司名', width:'20%'},
+                {field:'ownerName',title:'公司拥有者',width:'10%'},
+                {field:'crew',title:'组员（以逗号分隔）',width:'20%'},
+                {field:'status',title:'状态',width:'10%',  templet: '.statusTpl'},
+                {field:'uTString',title:'操作时间',width:'10%'},
+                {field:'uUName',title:'操作人',width:'10%'},
+                {title:'操作',width:'10%' , toolbar: '#barRender'}
             ]],
             height:500
         });
@@ -277,8 +276,8 @@
 
 <!--编辑模板-->
 <script type="text/html" id="barRender">
-    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 </script>
 
 <!--更新时间模板-->

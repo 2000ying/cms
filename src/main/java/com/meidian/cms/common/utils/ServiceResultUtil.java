@@ -45,8 +45,8 @@ public class ServiceResultUtil {
         return result;
     }
 
-    public static ServiceResult returnTrue(Object body){
-        ServiceResult result = new ServiceResult();
+    public static <T> ServiceResult<T> returnTrue(T body){
+        ServiceResult<T> result = new ServiceResult<>();
         result.setSuccess(true);
         result.setErrorCode(ErrorCode.SUCCESS.getCode());
         result.setMessage(ErrorCode.SUCCESS.getMessage());

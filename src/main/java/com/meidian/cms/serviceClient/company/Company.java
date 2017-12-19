@@ -149,6 +149,8 @@ public class Company implements Serializable {
     public void ifCompanyNameBlankToNull(){
         if ("".equals(companyName)){
             companyName =  null;
+        }else {
+            companyName = companyName.trim();
         }
     }
 }

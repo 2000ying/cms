@@ -48,8 +48,8 @@ public class ClientManagerImpl implements ClientManager {
                 if (!StringUtils.isEmpty(client.getName())){
                     predicate.add(cb.like(root.get("name"),client.getName()));
                 }
-                if (!StringUtils.isEmpty(client.getTel())){
-                    predicate.add(cb.like(root.get("mobile"),client.getTel()));
+                if (!StringUtils.isEmpty(client.getMobile())){
+                    predicate.add(cb.like(root.get("mobile"),client.getMobile()));
                 }
                 if (!CollectionUtil.isEmpty(companyIds)){
                     predicate.add(root.get("companyId").in(companyIds));

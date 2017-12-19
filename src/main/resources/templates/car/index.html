@@ -108,19 +108,18 @@
             elem:'#LAY_table_user',
             url:API.search,
             cols:[[
-                {type:'numbers'},
-                {field:'busNumber',title:'车牌号',width:200},
-                {field:'companyName',title:'所属公司',width:200},
-                {field:'engineNumber',title:'发动机号',width:200},
-                {field:'vehicleIdentificationNumber',title:'车架号',width:200},
-                {field:'operationCertificate',title:'营运证',width:200},
-                {field:'carType',title:'车型',width:80},
-                {field:'loadCapacity',title:'载重量',width:80},
-                {field:'status',title:'状态',width:80, templet: '.statusTpl'},
-                {field:'other',title:'其他',width:80},
-                {field:'uT',title:'操作时间',width:110,templet:'#uTTemplate'},
-                {field:'uUName',title:'操作人',width:80},
-                {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
+                {field:'busNumber',title:'车牌号',width:'10%'},
+                {field:'companyName',title:'所属公司',width:'10%'},
+                {field:'engineNumber',title:'发动机号',width:'10%'},
+                {field:'vehicleIdentificationNumber',title:'车架号',width:'10%'},
+                {field:'operationCertificate',title:'营运证',width:'10%'},
+                {field:'carType',title:'车型',width:'5%'},
+                {field:'loadCapacity',title:'载重量',width:'5%'},
+                {field:'status',title:'状态',width:'5%', templet: '.statusTpl'},
+                {field:'other',title:'其他',width:'10%'},
+                {field:'uT',title:'操作时间',width:'10%',templet:'#uTTemplate'},
+                {field:'uUName',title:'操作人',width:'5%'},
+                {title:'操作',width:'10%', toolbar: '#barRender'}
             ]],
             id:'car',
             page:true,
@@ -288,8 +287,8 @@
 </script>
 <!--表格-编辑模板-->
 <script type="text/html" id="barRender">
-    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 </script>
 <!--添加模板-->
 <script type="text/html" id="addTemplate">

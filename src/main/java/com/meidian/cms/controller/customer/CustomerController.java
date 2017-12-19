@@ -3,6 +3,7 @@ package com.meidian.cms.controller.customer;
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.Result;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.Strings;
 import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.common.utils.ResultUtils;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -78,6 +80,12 @@ public class CustomerController extends BasicController{
             }
         }else{
             companyIds.add(client.getCompanyId());
+        }
+        if (Strings.isNotEmpty(client.getName())){
+            client.setName(client.getName().trim());
+        }
+        if (Strings.isNotEmpty(client.getMobile())){
+            client.setMobile(client.getMobile().trim());
         }
     }
 

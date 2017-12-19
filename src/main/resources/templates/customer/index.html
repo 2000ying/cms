@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">电话</label>
+                        <label class="layui-form-label">手机</label>
                         <div class="layui-input-inline">
                             <input type="text" name="tel" autocomplete="off" class="layui-input" id="tel"/>
                         </div>
@@ -122,19 +122,18 @@
             elem:'#LAY_table_user',
             url:API.search,
             cols:[[
-                {type:'numbers'},
-                {field:'name',title:'姓名',width:80},
-                {field:'mobile',title:'电话',width:200,event: 'setTel'},
-                {field:'companyName',title:'所属公司',width:200},
-                {field:'tel',title:'手机',width:200, event: 'setMobile'},
-                {field:'address',title:'实际地址',width:200},
-                {field:'nowAddress',title:'暂住地址',width:200,event: 'setNowAddress'},
-                {field:'identifyNumber',title:'身份证号',width:200},
-                {field:'status',title:'状态',width:80,templet: '.statusTpl'},
-                {field:'other',title:'其他',width:80},
-                {field:'uT',title:'操作时间',width:110,templet:'#uTTemplate'},
-                {field:'uUName',title:'操作人',width:80},
-                {title:'操作',width:200 , align:'center', toolbar: '#barRender'}
+                {field:'name',title:'姓名',width : '10%'},
+                {field:'mobile',title:'手机',width : '10%'},
+                {field:'companyName',title:'所属公司',width : '5%'},
+                {field:'tel',title:'电话',width : '5%'},
+                {field:'address',title:'实际地址',width : '10%'},
+                {field:'nowAddress',title:'暂住地址',width : '10%',event: 'setNowAddress'},
+                {field:'identifyNumber',title:'身份证号',width : '10%'},
+                {field:'status',title:'状态',width : '5%',templet: '.statusTpl'},
+                {field:'other',title:'其他',width : '5%'},
+                {field:'uT',title:'操作时间',width : '10%',templet:'#uTTemplate'},
+                {field:'uUName',title:'操作人',width : '10%'},
+                {title:'操作',width : '10%' , align:'center', toolbar: '#barRender'}
             ]],
             id:'client',
             page:true,
@@ -314,8 +313,8 @@
 </script>
 <!--表格-编辑模板-->
 <script type="text/html" id="barRender">
-    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 </script>
 <!--添加模板-->
 <script type="text/html" id="addTemplate">
