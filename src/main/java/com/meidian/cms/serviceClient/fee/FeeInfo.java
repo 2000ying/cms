@@ -1,5 +1,7 @@
 package com.meidian.cms.serviceClient.fee;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -14,6 +16,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "fee_info")
+@DynamicInsert
 public class FeeInfo implements Serializable{
     @Id
     @GeneratedValue

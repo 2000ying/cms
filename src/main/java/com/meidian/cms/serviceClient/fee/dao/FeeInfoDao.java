@@ -2,6 +2,7 @@ package com.meidian.cms.serviceClient.fee.dao;
 
 import com.meidian.cms.serviceClient.agreement.Contract;
 import com.meidian.cms.serviceClient.fee.FeeInfo;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 

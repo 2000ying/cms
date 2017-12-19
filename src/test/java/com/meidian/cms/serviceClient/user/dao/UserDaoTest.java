@@ -26,9 +26,9 @@ public class UserDaoTest {
     @Test
     public void testSave(){
         User user = new User();
-        user.setMobile("1234567");
+        user.setMobile("22222");
         user.setName("test1");
-        user.setPassword("1234567");
+
         userDao.save(user);
     }
 
