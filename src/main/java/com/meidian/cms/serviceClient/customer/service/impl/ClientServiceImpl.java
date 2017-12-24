@@ -2,7 +2,11 @@ package com.meidian.cms.serviceClient.customer.service.impl;
 
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.exception.BusinessException;
+import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.common.utils.ServiceResultUtil;
+import com.meidian.cms.serviceClient.agreement.Contract;
+import com.meidian.cms.serviceClient.agreement.manager.ContractManager;
 import com.meidian.cms.serviceClient.customer.Client;
 import com.meidian.cms.serviceClient.customer.manager.ClientManager;
 import com.meidian.cms.serviceClient.customer.service.ClientService;
@@ -27,6 +31,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private ClientManager clientManager;
+
+    @Autowired
+    private ContractManager contractManager;
 
     @Override
     public Page<Client> getPageByClient(Pageable pageable, Client client, List<Long> companyIds) {
@@ -68,7 +75,12 @@ public class ClientServiceImpl implements ClientService {
      * @return
      */
     @Override
-    public ServiceResult<Boolean> deleteClient(Client client) {
+    public ServiceResult<Boolean> deleteClient(Client client) throws BusinessException{
+        //校验是否有合同，有则不能删除
+        List<Contract> contractList = contractManager.getContractByUserId(client.getId());
+        if (!CollectionUtil.isEmpty(contractList)){
+            throw new BusinessException("此客户尚有合同，禁止删除。清先处理合同",ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
         Boolean isUpdate = clientManager.deleteClient(client);
         if (!isUpdate){
             return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"删除失败！");

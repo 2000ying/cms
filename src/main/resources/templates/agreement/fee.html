@@ -40,18 +40,18 @@
             url:API_FEE.search,
             cols:[[
                 {type:'numbers'},
-                {field:'manageFee',title:'管理费',width:'5%'},
-                {title:'管理费有效日期',width:'15%',templet:'#manageFeeTimeTemplate'},
-                {field:'vehicleFee',title:'交强险',width:'5%'},
-                {title:'交强险费用有效日期',width:'15%',templet:'#vehicleFeeTimeTemplate'},
-                {field:'threeInsuranceFee',title:'三险',width:'5%'},
-                {title:'三险费用有效日期',width:'15%',templet:'#threeInsuranceFeeTemplate'},
-                {field:'gradeInsuranceFee',title:'等级二保',width:'5%'},
-                {title:'等级二保费用有效日期',width:'15%',templet:'#gradeInsuranceFeeTimeTemplate'},
-                {field:'other',title:'其他',width:'5%'},
-                {field:'remark',title:'备注',width:'5%'},
-                {field:'uT',title:'操作时间',width:'5%',templet:'#uTTemplate'},
-                {field:'uUName',title:'操作人',width:'5%'},
+                {field:'manageFee',title:'管理费',width:'15%'},
+                {title:'管理费有效日期',width:'20%',templet:'#manageFeeTimeTemplate'},
+                {field:'vehicleFee',title:'交强险',width:'15%'},
+                {title:'交强险费用有效日期',width:'20%',templet:'#vehicleFeeTimeTemplate'},
+                {field:'threeInsuranceFee',title:'三险',width:'15%'},
+                {title:'三险费用有效日期',width:'20%',templet:'#threeInsuranceFeeTemplate'},
+                {field:'gradeInsuranceFee',title:'等级二保',width:'15%'},
+                {title:'等级二保费用有效日期',width:'20%',templet:'#gradeInsuranceFeeTimeTemplate'},
+                {field:'other',title:'其他',width:'15%'},
+                {field:'remark',title:'备注',width:'15%'},
+                {field:'uT',title:'操作时间',width:'15%',templet:'#uTTemplate'},
+                {field:'uUName',title:'操作人',width:'15%'},
             ]],
             id:'fee',
             height:400,
@@ -154,16 +154,16 @@
 </script>
 <!--模板-->
 <script type="text/html" id="manageFeeTimeTemplate">
-    {{formatTimestamp(d.manageFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.manageFeeExpireTime,'yyyy-MM-dd')}}
+    {{d.manageFeeTime == 0 ? '无' : formatTimestamp(d.manageFeeTime,'yyyy-MM-dd') + "-" + (d.manageFeeExpireTime == 0 ? '无' : formatTimestamp(d.manageFeeExpireTime,'yyyy-MM-dd'))}}
 </script>
 <script type="text/html" id="vehicleFeeTimeTemplate">
-    {{formatTimestamp(d.vehicleFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.vehicleFeeExpireTime,'yyyy-MM-dd')}}
+    {{d.vehicleFeeTime == 0 ? '无' :  formatTimestamp(d.vehicleFeeTime,'yyyy-MM-dd') + "-" + ( d.vehicleFeeExpireTime == 0 ? '无' : formatTimestamp(d.vehicleFeeExpireTime,'yyyy-MM-dd'))}}
 </script>
 <script type="text/html" id="threeInsuranceFeeTemplate">
-    {{formatTimestamp(d.threeInsuranceFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.threeInsuranceFeeExpireTime,'yyyy-MM-dd')}}
+    {{d.threeInsuranceFeeTime == 0 ? '无' :  formatTimestamp(d.threeInsuranceFeeTime,'yyyy-MM-dd') + "-" + ( d.threeInsuranceFeeExpireTime == 0 ? '无' :   formatTimestamp(d.threeInsuranceFeeExpireTime,'yyyy-MM-dd'))}}
 </script>
 <script type="text/html" id="gradeInsuranceFeeTimeTemplate">
-    {{formatTimestamp(d.gradeInsuranceFeeTime,'yyyy-MM-dd') + "-" + formatTimestamp(d.gradeInsuranceFeeExpireTime,'yyyy-MM-dd')}}
+    {{d.gradeInsuranceFeeTime== 0 ? '无' : formatTimestamp(d.gradeInsuranceFeeTime,'yyyy-MM-dd') + "-" + ( d.gradeInsuranceFeeExpireTime == 0 ? '无' :   formatTimestamp(d.gradeInsuranceFeeExpireTime,'yyyy-MM-dd'))}}
 </script>
 
 <!--更新时间模板-->

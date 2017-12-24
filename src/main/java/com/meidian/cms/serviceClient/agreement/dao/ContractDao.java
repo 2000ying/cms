@@ -40,4 +40,12 @@ public interface ContractDao extends CrudRepository<Contract,Long>, JpaSpecifica
      * @return
      */
     List<Contract> getContractByIdIn(List<Long> contractIds);
+
+    /**
+     * 根据公司id获取合同信息
+     * @param id
+     * @param i
+     * @return
+     */
+    List<Contract> getContractByCompanyIdAndIsDeleted(Long id, int i);
 }

@@ -1,6 +1,7 @@
 package com.meidian.cms.serviceClient.company.service;
 
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.serviceClient.company.Company;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface CompanyService {
      * @param company
      * @return
      */
-    ServiceResult<Boolean> deleteCompanyById(Company company);
+    ServiceResult<Boolean> deleteCompanyById(Company company) throws BusinessException;
 
     /**
      * 存储公司信息

@@ -168,19 +168,27 @@ public class GenerateWorkOrderSchedule {
         StringBuilder builder = new StringBuilder(Strings.defaultIfNull(workOrder.getContent(),""));
         if (end > obj.getGradeInsuranceFeeExpireTime()){
             builder.append("等级二保费用到期！");
-            expireTime = Integers.min(expireTime,obj.getGradeInsuranceFeeExpireTime());
+            if (0 != obj.getGradeInsuranceFeeExpireTime()){
+                expireTime = Integers.min(expireTime,obj.getGradeInsuranceFeeExpireTime());
+            }
         }
         if (end > obj.getManageFeeExpireTime()){
             builder.append("管理费到期！");
-            expireTime = Integers.min(expireTime,obj.getManageFeeExpireTime());
+            if (0 != obj.getManageFeeExpireTime()){
+                expireTime = Integers.min(expireTime,obj.getManageFeeExpireTime());
+            }
         }
         if (end > obj.getVehicleFeeExpireTime()){
             builder.append("交强险费用到期！");
-            expireTime = Integers.min(expireTime,obj.getVehicleFeeExpireTime());
+            if (0 != obj.getVehicleFeeExpireTime()){
+                expireTime = Integers.min(expireTime,obj.getVehicleFeeExpireTime());
+            }
         }
         if (end > obj.getThreeInsuranceFeeExpireTime()){
             builder.append("三险费用到期！");
-            expireTime = Integers.min(expireTime,obj.getThreeInsuranceFeeExpireTime());
+            if (0 != obj.getThreeInsuranceFeeExpireTime()){
+                expireTime = Integers.min(expireTime,obj.getThreeInsuranceFeeExpireTime());
+            }
         }
         workOrder.setContent(builder.toString());
         workOrder.setExpirationTime(expireTime);

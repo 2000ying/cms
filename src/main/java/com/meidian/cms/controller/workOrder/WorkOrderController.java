@@ -1,13 +1,22 @@
 package com.meidian.cms.controller.workOrder;
 
 
+import com.aliyuncs.exceptions.ClientException;
+import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.Result;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.exception.BusinessException;
+import com.meidian.cms.common.sms.TemplateCode;
 import com.meidian.cms.common.utils.ResultUtils;
+import com.meidian.cms.common.utils.ServiceResultUtil;
 import com.meidian.cms.common.utils.TimeUtil;
 import com.meidian.cms.controller.basic.BasicController;
 import com.meidian.cms.serviceClient.car.CarInfo;
+import com.meidian.cms.serviceClient.customer.Client;
+import com.meidian.cms.serviceClient.customer.service.ClientService;
+import com.meidian.cms.serviceClient.sms.SMSService;
 import com.meidian.cms.serviceClient.user.User;
+import com.meidian.cms.serviceClient.user.service.UserService;
 import com.meidian.cms.serviceClient.workOrder.WorkOrder;
 import com.meidian.cms.serviceClient.workOrder.service.WorkOrderService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -21,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -31,6 +41,15 @@ public class WorkOrderController extends BasicController {
 
     @Autowired
     private WorkOrderService workOrderService;
+
+    @Autowired
+    private SMSService smsService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ClientService clientService;
 
     @RequestMapping("/index")
     public ModelAndView index(){
@@ -67,5 +86,28 @@ public class WorkOrderController extends BasicController {
         workOrder.setuUName(user.getName());
         workOrder.setuU(user.getId());
         workOrder.setuT(TimeUtil.getNowTimeStamp());
+    }
+
+    @ResponseBody
+    @RequestMapping("/notify")
+    public ServiceResult<Boolean> notify(HttpServletRequest request, WorkOrder workOrder) throws BusinessException {
+        /*获取处理人信息*/
+        ServiceResult<List<User>> userServiceResult = userService.getUserByIdIn(Arrays.asList(workOrder.getHandlerId()));
+        if (!userServiceResult.getSuccess()){
+            throw new BusinessException("获取处理人信息报错，错误信息：" + userServiceResult.getMessage(), ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+        User user = userServiceResult.getBody().get(0);
+        /*获取通知客户信息*/
+        ServiceResult<Client> clientServiceResult = clientService.getClientById(workOrder.getClientId());
+        if (!clientServiceResult.getSuccess()){
+            throw new BusinessException("获取客户信息报错，错误信息：" + clientServiceResult.getMessage(), ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+        Client client = clientServiceResult.getBody();
+        try {
+            smsService.sendSms("张中凯", TemplateCode.CODE_NOTIFY,client.getMobile(),user.getMobile());
+        } catch (ClientException e) {
+            return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"通知失败！，失败原因：" + e.getMessage());
+        }
+        return ServiceResultUtil.returnTrue("通知成功！");
     }
 }

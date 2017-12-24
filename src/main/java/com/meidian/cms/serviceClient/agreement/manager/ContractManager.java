@@ -56,4 +56,11 @@ public interface ContractManager {
      * @return
      */
     List<Contract> getContractByIdIn(List<Long> contractIds);
+
+    /**
+     * 根据公司id获取合同信息
+     * @param id
+     * @return
+     */
+    List<Contract> getContractByCompanyId(Long id);
 }

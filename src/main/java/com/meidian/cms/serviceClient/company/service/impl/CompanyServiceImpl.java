@@ -3,7 +3,11 @@ package com.meidian.cms.serviceClient.company.service.impl;
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.ServiceResult;
 import com.meidian.cms.common.constant.Status;
+import com.meidian.cms.common.exception.BusinessException;
+import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.common.utils.ServiceResultUtil;
+import com.meidian.cms.serviceClient.agreement.Contract;
+import com.meidian.cms.serviceClient.agreement.manager.ContractManager;
 import com.meidian.cms.serviceClient.company.Company;
 import com.meidian.cms.serviceClient.company.manager.CompanyManager;
 import com.meidian.cms.serviceClient.company.service.CompanyService;
@@ -31,6 +35,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CompanyManager companyManager;
 
+    @Autowired
+    private ContractManager contractManager;
+
     @Override
     public ServiceResult<List<Company>> findAll(Company company) {
         List<Company> companyList = companyManager.findAll(company);
@@ -46,7 +53,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public ServiceResult<Boolean> deleteCompanyById(Company company) {
+    public ServiceResult<Boolean> deleteCompanyById(Company company) throws BusinessException{
+        //校验合同
+        List<Contract> contractList = contractManager.getContractByCompanyId(company.getId());
+        if (!CollectionUtil.isEmpty(contractList)){
+            throw new BusinessException("此公司尚有合同，禁止删除。清先处理合同！",ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+
         if (companyManager.deleteCompanyById(company) > 0){
             return ServiceResultUtil.returnTrue("删除公司信息成功！");
         }

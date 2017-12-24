@@ -116,7 +116,7 @@ public class WorkOrderManagerImpl implements WorkOrderManager {
         });
 
         if (!CollectionUtil.isEmpty(toAdd)){
-            workOrderDao.save(workOrderList);
+            workOrderDao.save(toAdd);
         }
         return Boolean.TRUE;
     }

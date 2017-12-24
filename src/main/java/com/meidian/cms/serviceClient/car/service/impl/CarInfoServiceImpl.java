@@ -2,7 +2,11 @@ package com.meidian.cms.serviceClient.car.service.impl;
 
 import com.meidian.cms.common.Enum.ErrorCode;
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.exception.BusinessException;
+import com.meidian.cms.common.utils.CollectionUtil;
 import com.meidian.cms.common.utils.ServiceResultUtil;
+import com.meidian.cms.serviceClient.agreement.Contract;
+import com.meidian.cms.serviceClient.agreement.manager.ContractManager;
 import com.meidian.cms.serviceClient.car.CarInfo;
 import com.meidian.cms.serviceClient.car.manager.CarInfoManager;
 import com.meidian.cms.serviceClient.car.service.CarInfoService;
@@ -29,6 +33,9 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Autowired
     private CarInfoManager carInfoManager;
+
+    @Autowired
+    private ContractManager contractManager;
 
     /**
      * 获取车辆的信息
@@ -77,7 +84,13 @@ public class CarInfoServiceImpl implements CarInfoService {
      * @return
      */
     @Override
-    public ServiceResult<Boolean> deleteCarInfo(CarInfo carInfo) {
+    public ServiceResult<Boolean> deleteCarInfo(CarInfo carInfo) throws BusinessException{
+        //校验是否有合同
+        List<Contract> contractList = contractManager.getContractByCarId(carInfo.getId());
+        if (!CollectionUtil.isEmpty(contractList)){
+            throw new BusinessException("此车辆有绑定的合同，禁止删除，请先处理合同！",ErrorCode.BUSINESS_DEFAULT_ERROR.getCode());
+        }
+
         Boolean isUpdate = carInfoManager.deleteCarInfo(carInfo);
         if (!isUpdate){
             return ServiceResultUtil.returnFalse(ErrorCode.BUSINESS_DEFAULT_ERROR.getCode(),"删除失败！");

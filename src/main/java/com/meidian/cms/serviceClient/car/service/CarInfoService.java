@@ -1,6 +1,7 @@
 package com.meidian.cms.serviceClient.car.service;
 
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.serviceClient.car.CarInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +47,7 @@ public interface CarInfoService {
      * @param carInfo
      * @return
      */
-    ServiceResult<Boolean> deleteCarInfo(CarInfo carInfo);
+    ServiceResult<Boolean> deleteCarInfo(CarInfo carInfo) throws BusinessException;
 
     /**
      * 获取车辆信息，排除已经绑定商户的车

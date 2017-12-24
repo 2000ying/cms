@@ -1,6 +1,7 @@
 package com.meidian.cms.serviceClient.customer.service;
 
 import com.meidian.cms.common.ServiceResult;
+import com.meidian.cms.common.exception.BusinessException;
 import com.meidian.cms.serviceClient.customer.Client;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +46,7 @@ public interface ClientService {
      * @param client
      * @return
      */
-    ServiceResult<Boolean> deleteClient(Client client);
+    ServiceResult<Boolean> deleteClient(Client client) throws BusinessException;
 
     /**
      * 根据公司id获取人员信息
