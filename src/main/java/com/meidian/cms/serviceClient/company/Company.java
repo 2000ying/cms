@@ -29,6 +29,12 @@ public class Company implements Serializable {
     private  String crew;
     /*是否有效，0：启动，1：不启动*/
     private Integer status;
+    /*阿里云短信入口权限id*/
+    private String smsAccessKeyId;
+    /*阿里云短信入口秘钥*/
+    private String smsAccessKeySecret;
+    /*短信模板编号*/
+    private String smsTemplateCode;
     /*是否删除*/
     private Integer isDeleted = new Integer(0);
     /*创建时间*/
@@ -84,6 +90,30 @@ public class Company implements Serializable {
 
     public Integer getIsDeleted() {
         return isDeleted;
+    }
+
+    public String getSmsAccessKeyId() {
+        return smsAccessKeyId;
+    }
+
+    public void setSmsAccessKeyId(String smsAccessKeyId) {
+        this.smsAccessKeyId = smsAccessKeyId;
+    }
+
+    public String getSmsAccessKeySecret() {
+        return smsAccessKeySecret;
+    }
+
+    public void setSmsAccessKeySecret(String smsAccessKeySecret) {
+        this.smsAccessKeySecret = smsAccessKeySecret;
+    }
+
+    public String getSmsTemplateCode() {
+        return smsTemplateCode;
+    }
+
+    public void setSmsTemplateCode(String smsTemplateCode) {
+        this.smsTemplateCode = smsTemplateCode;
     }
 
     public void setIsDeleted(Integer isDeleted) {

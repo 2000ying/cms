@@ -166,25 +166,25 @@ public class GenerateWorkOrderSchedule {
     private void setContent(WorkOrder workOrder, FeeInfo obj, Integer end) {
         Integer expireTime = Integer.MAX_VALUE;
         StringBuilder builder = new StringBuilder(Strings.defaultIfNull(workOrder.getContent(),""));
-        if (end > obj.getGradeInsuranceFeeExpireTime()){
+        if (end > obj.getGradeInsuranceFeeExpireTime() && 0 != obj.getGradeInsuranceFeeExpireTime()){
             builder.append("等级二保费用到期！");
             if (0 != obj.getGradeInsuranceFeeExpireTime()){
                 expireTime = Integers.min(expireTime,obj.getGradeInsuranceFeeExpireTime());
             }
         }
-        if (end > obj.getManageFeeExpireTime()){
+        if (end > obj.getManageFeeExpireTime() && 0 != obj.getManageFeeExpireTime()){
             builder.append("管理费到期！");
             if (0 != obj.getManageFeeExpireTime()){
                 expireTime = Integers.min(expireTime,obj.getManageFeeExpireTime());
             }
         }
-        if (end > obj.getVehicleFeeExpireTime()){
+        if (end > obj.getVehicleFeeExpireTime() && 0 != obj.getVehicleFeeExpireTime()){
             builder.append("交强险费用到期！");
             if (0 != obj.getVehicleFeeExpireTime()){
                 expireTime = Integers.min(expireTime,obj.getVehicleFeeExpireTime());
             }
         }
-        if (end > obj.getThreeInsuranceFeeExpireTime()){
+        if (end > obj.getThreeInsuranceFeeExpireTime() && 0 != obj.getThreeInsuranceFeeExpireTime()){
             builder.append("三险费用到期！");
             if (0 != obj.getThreeInsuranceFeeExpireTime()){
                 expireTime = Integers.min(expireTime,obj.getThreeInsuranceFeeExpireTime());
